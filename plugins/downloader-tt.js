@@ -84,7 +84,7 @@ const handler = async (m, { conn, text, usedPrefix}) => {
 };
 
 function createCaption(title, author, duration, created_at = '') {
-  return `🌱 *_Título:_* \`${title || 'No disponible'}\`\n` +
+  return `🌱 *_Título:_* ${title || 'No disponible'}\`\n` +
          `🌵 *_Autor:_* ${author?.nickname || author?.unique_id || 'No disponible'}\n` +
          `🍇 *_Duración:_* ${duration || 'No disponible'}s` +
          (created_at? `\n🌱 *_Creado:_* ${created_at}`: '') +
