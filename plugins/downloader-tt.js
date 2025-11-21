@@ -1,111 +1,106 @@
-//▪CÓDIGO BY HASHIRAMA PRROS XD▪
-//▪WHATSAPP MODS▪
+import axios from 'axios';
 
-import axios from 'axios'
-import fetch from 'node-fetch'
+const handler = async (m, { conn, text, usedPrefix}) => {
+  if (!text) {
+    return conn.reply(m.chat, '\`\`\`🌱 Por favor, ingresa un término de búsqueda o el enlace de TikTok.\`\`\`', m);
+}
 
-async function makeFkontak() {
+  const isUrl = /(?:https:?\/{2})?(?:www\.|vm\.|vt\.|t\.)?tiktok\.com\/([^\s&]+)/gi.test(text);
+
   try {
-    const res = await fetch('https://i.postimg.cc/8zG3Ny13/image.jpg') 
-    
-    const thumb2 = Buffer.from(await res.arrayBuffer())
-    return {
-      key: { participants: '0@s.whatsapp.net', remoteJid: 'status@broadcast', fromMe: false, id: 'Halo' },
-      message: { locationMessage: { name: 'Shadow - Descarga', jpegThumbnail: thumb2 } },
-      participant: '0@s.whatsapp.net'
-    }
-  } catch {
-    return undefined
-  }
+    await m.react('🕒');
+
+    if (isUrl) {
+      const res = await axios.get(`https://www.tikwm.com/api/?url=${encodeURIComponent(text)}?hd=1`);
+      const data = res.data?.data;
+
+      if (!data?.play) {
+        return conn.reply(m.chat, '_🍂 Enlace inválido o sin contenido descargable._', m);
 }
 
-async function obtenerTokenYCookie() {
-  const res = await axios.get('https://tmate.cc/id', {
-    headers: { 'User-Agent': 'Mozilla/5.0' }
-  })
-  const cookie = res.headers['set-cookie']?.map(c => c.split(';')[0]).join('; ') || ''
-  const tokenMatch = res.data.match(/<input[^>]+name="token"[^>]+value="([^"]+)"/i)
-  const token = tokenMatch?.[1]
-  if (!token) throw new Error('\`\`\`🪐 No se encontró el token\`\`\`')
-  return { token, cookie }
+      const { title, duration, author, created_at, type, images, music, play} = data;
+      const caption = createCaption(title, author, duration, created_at);
+
+      if (type === 'image' && Array.isArray(images)) {
+        const medias = images.map(url => ({
+          type: 'image',
+          data: { url},
+          caption
+}));
+        await conn.sendSylphy(m.chat, medias, { quoted: m});
+
+        if (music) {
+          await conn.sendMessage(m.chat, {
+            audio: { url: music},
+            mimetype: 'audio/mp4',
+            fileName: 'tiktok_audio.mp4'
+}, { quoted: m});
+}
+} else {
+        await conn.sendMessage(m.chat, {
+          video: { url: play},
+          caption
+}, { quoted: m});
 }
 
-async function descargarTikTok(urlTikTok) {
-  const { token, cookie } = await obtenerTokenYCookie()
-  const params = new URLSearchParams()
-  params.append('url', urlTikTok)
-  params.append('token', token)
+} else {
+      const res = await axios({
+        method: 'POST',
+        url: 'https://tikwm.com/api/feed/search',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Cookie': 'current_language=en',
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36'
+},
+        data: {
+          keywords: text,
+          count: 20,
+          cursor: 0,
+          HD: 1
+}
+});
 
-  const res = await axios.post('https://tmate.cc/action', params.toString(), {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': 'Mozilla/5.0',
-      'Referer': 'https://tmate.cc/id',
-      'Origin': 'https://tmate.cc',
-      'Cookie': cookie
-    }
-  })
+      const results = res.data?.data?.videos?.filter(v => v.play) || [];
 
-  const html = res.data?.data
-  if (!html) throw new Error('\`\`\`🌱 No se encontraron datos en la respuesta\`\`\`')
-
-  const titleMatch = html.match(/<h1[^>]*>(.*?)<\/h1>/i)
-  const titulo = titleMatch?.[1]?.replace(/<[^>]+>/g, '').trim() || 'Sin título'
-
-  const matches = [...html.matchAll(/<a[^>]+href="(https:\/\/[^"]+)"[^>]*>\s*<span>\s*<span>([^<]*)<\/span><\/span><\/a>/gi)]
-  const vistos = new Set()
-  const links = matches
-    .map(([_, href, label]) => ({ href, label: label.trim() }))
-    .filter(({ href }) => !href.includes('play.google.com') && !vistos.has(href) && vistos.add(href))
-
-  const enlacesMp4 = links.filter(v => /download without watermark/i.test(v.label))
-  const enlaceMp3 = links.find(v => /download mp3 audio/i.test(v.label))
-
-  if (enlacesMp4.length > 0) return { tipo: 'video', titulo, enlacesMp4, enlaceMp3 }
-
-  const imageMatches = [...html.matchAll(/<img[^>]+src="(https:\/\/tikcdn\.app\/a\/images\/[^"]+)"/gi)]
-  const enlacesImagenes = [...new Set(imageMatches.map(m => m[1]))]
-
-  if (enlacesImagenes.length > 0) return { tipo: 'imagen', titulo, imagenes: enlacesImagenes, enlaceMp3 }
-
-  throw new Error('\`\`\`🌿 No hubo respuesta, puede que el enlace sea incorrecto\`\`\`')
+      if (results.length < 2) {
+        return conn.reply(m.chat, '🍇 Se requieren al menos 2 resultados válidos con contenido.', m);
 }
 
-let handler = async (m, { conn, args }) => {
-  try {
-    let fkontak = await makeFkontak()
+      const medias = results.slice(0, 10).map(v => ({
+        type: 'video',
+        data: { url: v.play},
+        caption: createSearchCaption(v)
+}));
 
-    if (!args[0]) return conn.reply(m.chat, '\`\`\`🌵 Por favor, ingresa un enlace de TikTok\`\`\`\'', fkontak, rcanal)
-    const url = args[0]
-    if (!url.includes('tiktok.com')) return conn.reply(m.chat, '\`\`\`⚠️ El enlace debe ser de TikTok\`\`\`', fkontak, rcanal)
-
-    await conn.reply(m.chat, '\`\`\`⏳ Descargando, espera un momento...\`\`\`', fkontak, rcanal)
-
-    const resultado = await descargarTikTok(url)
-
-    if (resultado.tipo === 'video') {
-      const videoUrl = resultado.enlacesMp4[0].href
-      await conn.sendMessage(m.chat, { video: { url: videoUrl }, caption: `🎥 ${resultado.titulo}` }, { quoted: fkontak })
-      if (resultado.enlaceMp3) {
-        await conn.sendMessage(m.chat, { audio: { url: resultado.enlaceMp3.href }, mimetype: 'audio/mpeg' }, { quoted: fkontak })
-      }
-    } else if (resultado.tipo === 'imagen') {
-      for (let img of resultado.imagenes) {
-        await conn.sendMessage(m.chat, { image: { url: img }, caption: `🖼 ${resultado.titulo}` }, { quoted: fkontak })
-      }
-      if (resultado.enlaceMp3) {
-        await conn.sendMessage(m.chat, { audio: { url: resultado.enlaceMp3.href }, mimetype: 'audio/mpeg' }, { quoted: fkontak })
-      }
-    }
-
-  } catch (e) {
-    let fkontak = await makeFkontak()
-    conn.reply(m.chat, `⚠️ Error: ${e.message}`, fkontak, rcanal)
-  }
+      await conn.sendSylphy(m.chat, medias, { quoted: m});
 }
 
-handler.help = ['tiktok']
-handler.command = ['tiktok', 'tt', 'tiktokdl']
-handler.tags = ['downloader']
+    await m.react('✔️');
 
-export default handler
+} catch (e) {
+    await m.react('✖️');
+    await conn.reply(m.chat, `⚠️ Ocurrió un error.\n> Usa *${usedPrefix}report* para informarlo.\n\n${e.message}`, m);
+}
+};
+
+function createCaption(title, author, duration, created_at = '') {
+  return `🌱 *Título:* \`${title || 'No disponible'}\`\n` +
+         `🌵 *Autor:* ${author?.nickname || author?.unique_id || 'No disponible'}\n` +
+         `🍇 *Duración:* ${duration || 'No disponible'}s` +
+         (created_at? `\n🌱 *Creado:* ${created_at}`: '') +
+         `\n🌵 *Música:* [${author?.nickname || 'No disponible'}] original sound - ${author?.unique_id || 'unknown'}`;
+}
+
+function createSearchCaption(data) {
+  return `🌱 *Título:* ${data.title || 'No disponible'}\n\n` +
+         `🌵 *Autor:* ${data.author?.nickname || 'Desconocido'} ${data.author?.unique_id? `@${data.author.unique_id}`: ''}\n` +
+         `🍇 *Duración:* ${data.duration || 'No disponible'}\n` +
+         `🌱 *Música:* ${data.music?.title || `[${data.author?.nickname || 'No disponible'}] original sound - ${data.author?.unique_id || 'unknown'}`}`;
+}
+
+handler.help = ['tiktoks', 'tt', 'tts', 'tiktoks'];
+handler.tags = ['downloader'];
+handler.command = ['tiktok', 'tt', 'tiktoks', 'tts'];
+handler.group = true;
+
+export default handler;
