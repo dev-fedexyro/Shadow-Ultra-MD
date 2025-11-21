@@ -21,20 +21,20 @@ global.año = d.toLocaleDateString('es', { year: 'numeric' })
 global.tiempo = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })
 global.hora = d.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
-var canal = 'https://whatsapp.com/channel/0029VbBBNfH4Y9ltpS4C8w3c'
-var comunidad = 'https://chat.whatsapp.com/KqkJwla1aq1LgaPiuFFtEY'
-var git = 'https://github.com/SoySapo6'
-var github = 'https://github.com/SoySapo6/MayBot'
-var correo = 'soymaycol.cn@gmail.com'
+var canal = 'https://whatsapp.com/channel/'
+var comunidad = 'https://chat.whatsapp.com/'
+var git = 'https://github.com/dev-fedexyro'
+var github = 'https://github.com/dev-fedexyro/Shadow-xyz'
+var correo = 'federicoxyzz@gmail.com'
 global.redes = [canal, comunidad, git, github, correo].getRandom()
 
 let nombre = m.pushName || 'Anónimo'
 let botname = global.botName || 'Տհαժօա - Ⴆօէ'
 
 global.packsticker = `
-🌱ᬊ Usuario: ${nombre}
-✺ Fecha: ${fecha}
-✹ Hora: ${hora}
+🌱 Usuario: ${nombre}
+📚 Fecha: ${fecha}
+⏱ Hora: ${hora}
 ⊱Made by fede Uchiha ✧
 `
 
