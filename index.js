@@ -31,7 +31,7 @@ const { chain } = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
 let { say } = cfonts
-console.log(chalk.magentaBright('\n🌱 Iniciando...\n'));
+console.log(chalk.magentaBright('\n🌱 Iniciando...'))
 
 say('Shadow-Bot', {
   font: 'block',
@@ -44,10 +44,9 @@ say('Made by fede Uchiha', {
   font: 'console',
   align: 'center',
   colors: ['cyan', 'magenta', 'yellow']
-});
-
-protoType();
-serialize();
+})
+protoType()
+serialize()
 
 if (!existsSync("./tmp")) {
   mkdirSync("./tmp");
@@ -65,7 +64,10 @@ return createRequire(dir)
 global.timestamp = { start: new Date() }
 const __dirname = global.__dirname(import.meta.url)
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-global.prefix = new RegExp('^[/]')
+
+global.prefix = new RegExp('^[/]') 
+
+global.ownerPrefix = new RegExp('^[.]')
 
 global.db = new Low(/https?:\/\//.test(global.opts['db'] || '') ? new cloudDBAdapter(global.opts['db']) : new JSONFile('database.json'))
 global.DATABASE = global.db
@@ -324,7 +326,7 @@ spawn('gm'),
 spawn('find', ['--version']),
 ].map((p) => {
 return Promise.race([
-new Promise((resolve) => {
+new new Promise((resolve) => {
 p.on('close', (code) => {
 resolve(code !== 127)
 })}),
@@ -336,7 +338,7 @@ const [ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find] = test
 const s = global.support = { ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find }
 Object.freeze(global.support)
 }
-// Tmp
+
 setInterval(async () => {
 const tmpDir = join(__dirname, 'tmp')
 try {
