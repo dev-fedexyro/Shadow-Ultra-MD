@@ -1,3 +1,5 @@
+import fetch from 'node-fetch'
+
 async function makeFkontak() {
   try {
     const res = await fetch('https://i.postimg.cc/rFfVL8Ps/image.jpg');
@@ -22,91 +24,69 @@ async function makeFkontak() {
 }
 }
 
-const handler = async (m, { conn, text, participants, parseUserTargets, getUserInfo}) => {
+async function resolveLidSafe(conn, jid) {
   try {
+    if (typeof conn.onWhatsApp !== 'function') return null; 
+    
+    const res = await conn.onWhatsApp(jid);
+    const r = Array.isArray(res) ? res[0] : null;
+    return r?.lid || null;
+} catch (e) {
+    console.error(`Error al obtener LID para ${jid}:`, e.message);
+    return null;
+}
+}
 
-    if (!m.mentionedJid?.length &&!m.quoted &&!text?.trim()) {
+const handler = async (m, { conn, text, participants, parseUserTargets }) => {
+  try {
+    if (!m.mentionedJid?.length && !m.quoted && !text?.trim()) {
       return conn.reply(m.chat, `
-*🔧 Ejemplo de targeting optimizado*
+*🔍 Verificador de LID*
 
 *Uso:*
-• \`.ejemplo @usuario\` — Mencionar usuario
-• \`.ejemplo\` (responder mensaje) — Target del mensaje citado
-• \`.ejemplo 1234567890\` — Número directo
-• \`.ejemplo @user1 @user2 1234567890\` — Múltiples targets
+• \`.lid @usuario\` — Menciona un usuario
+• \`.lid\` (responde a un mensaje) — Obtiene el LID del usuario citado
+• \`.lid 1234567890\` — Número directo
       `.trim(), m, rcanal);
-}
+    }
 
-    const targets = await parseUserTargets(m, text, participants, conn);
+    const targets = await parseUserTargets(m, text, participants, conn); 
+
     if (!targets.length) {
       return conn.reply(m.chat, '❌ No se encontraron usuarios válidos para procesar.', m, rcanalx);
-}
-
-    let results = [];
-    for (let target of targets) {
-      const userInfo = await getUserInfo(target, participants, conn);
-      results.push(userInfo);
-}
-
-    async function resolveLidSafe(jid) {
-      try {
-        if (typeof conn.onWhatsApp!== 'function') return null;
-        const res = await conn.onWhatsApp(jid);
-        const r = Array.isArray(res)? res[0]: null;
-        return r?.lid || null;
-} catch {
-        return null;
-}
-}
-
-    if (results.length && results.length <= 5) {
-      for (const u of results) {
-        u.lid = await resolveLidSafe(u.jid);
-}
-}
-
-    try {
-      const lidDigitsSet = new Set(
-        results
-.map(u => (u?.lid? String(u.lid).replace(/[^0-9]/g, ''): null))
-.filter(Boolean)
-);
-      const filtered = results.filter(u =>!lidDigitsSet.has(String(u.number)));
-      if (filtered.length) results = filtered;
-} catch {}
-
-    let response = `*🔎 Usuarios procesados: ${results.length}*\n\n`;
-    for (let i = 0; i < results.length; i++) {
-      const user = results[i];
-      const badges = [];
-
-      if (user.isSuperAdmin) badges.push('Creador');
-      else if (user.isAdmin) badges.push('ADMIN');
-      else if (user.exists) badges.push('MIEMBRO');
-      if (!user.exists) badges.push('NO EN GRUPO');
-
-      response += `*${i + 1}.* ${user.name}\n`;
-      response += `   🆔️ ID: ${user.jid}\n`;
-      response += `   🏷 LID: ${user.lid || '—'}\n`;
-      response += `   👤 ${user.number}\n`;
-      if (badges.length) response += `   🌵 ${badges.join(', ')}\n`;
-      response += `  📲  @${user.number}\n\n`;
-}
-
+    }
+    
+    const targetJid = targets[0];
     const fkontak = await makeFkontak().catch(() => null);
-    const mentionJids = results.map(u => u.jid).filter(Boolean);
-
+    
+    const lid = await resolveLidSafe(conn, targetJid);
+    
+    const targetNumber = targetJid.split('@')[0];
+    const targetName = conn.getName(targetJid); 
+    
+    let response = `*👤 Usuario:* ${targetName}\n`;
+    response += `*📞 Número:* ${targetNumber}\n`;
+    response += `*🆔️ JID:* ${targetJid}\n\n`;
+    
+    if (lid) {
+        response += `*✅ Linked ID (LID):* \`${lid}\``;
+    } else {
+        response += `*❌ Linked ID (LID):* No encontrado o el usuario no existe en WhatsApp.`;
+    }
+    
+    const mentionJids = [targetJid];
+    
     try {
       const optsOk = (typeof rcanalr === 'object')? {...rcanalr, mentions: mentionJids}: { mentions: mentionJids};
       await conn.reply(m.chat, response.trim(), fkontak || m, optsOk);
-} catch (e) {
+    } catch (e) {
       const optsErr = (typeof rcanalx === 'object')? {...rcanalx, mentions: mentionJids}: { mentions: mentionJids};
       await conn.reply(m.chat, response.trim(), fkontak || m, optsErr);
-}
+    }
 
 } catch (error) {
-    console.error('❌ Error en ejemplo-optimized-user-targeting:', error);
-conn.reply(m.chat, '❌ Error al procesar usuarios: ' + error.message, m, rcanalx);
+    console.error('❌ Error en dedgrupo-lid:', error);
+    conn.reply(m.chat, '❌ Error al procesar: ' + error.message, m, rcanalx);
 }
 };
 
