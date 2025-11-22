@@ -2,6 +2,7 @@ const handler = async (m, { args, conn, usedPrefix, command}) => {
   try {
     if (!args[0]) {
       return conn.reply(m.chat, `🌱 Por favor, ingresa un enlace de *Instagram* o *Facebook*.`, m)
+}
 
     let data = []
     const url = encodeURIComponent(args[0])
@@ -67,7 +68,7 @@ const handler = async (m, { args, conn, usedPrefix, command}) => {
 }
 
 handler.command = ['instagram', 'ig', 'facebook', 'fb']
-handler.tags = ['downloader']
+handler.tags = ['descargas']
 handler.help = ['instagram', 'ig', 'facebook', 'fb']
 handler.group = true
 
