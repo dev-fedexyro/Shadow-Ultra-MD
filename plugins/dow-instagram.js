@@ -63,7 +63,6 @@ const handler = async (m, { args, conn, usedPrefix, command}) => {
 
 } catch (error) {
     await m.react('🌾')
-    await m.reply(`\`\`\`🌵 Se ha producido un problema.\n> Usa ${usedPrefix}report para informarlo.\`\`\`\n\n${error.message}`)
 }
 }
 
