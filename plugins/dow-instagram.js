@@ -1,7 +1,7 @@
 const handler = async (m, { args, conn, usedPrefix, command}) => {
   try {
     if (!args[0]) {
-      return conn.reply(m.chat, `\`\`\`🌱 Por favor, ingresa un enlace de *Instagram* o *Facebook*.\`\`\``, m)
+      return conn.reply(m.chat, `\`\`\`🌱 Por favor, ingresa un enlace de Instagram o Facebook.\`\`\``, m)
 }
 
     let data = []
@@ -53,17 +53,17 @@ const handler = async (m, { args, conn, usedPrefix, command}) => {
 }
 
     if (!data.length) {
-      return conn.reply(m.chat, `🌾 No se pudo obtener el contenido.`, m)
+      return conn.reply(m.chat, `\`\`\`🌾 No se pudo obtener el contenido.\`\`\``, m)
 }
 
     for (let media of data) {
-      await conn.sendFile(m.chat, media, 'media.mp4', `🌵 Aquí tienes 🌱`, m)
+      await conn.sendFile(m.chat, media, 'media.mp4', `\`\`\`🌵 Aquí tienes:\`\`\``, m)
       await m.react('🌱')
 }
 
 } catch (error) {
     await m.react('🌾')
-    await m.reply(`🌵 Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n${error.message}`)
+    await m.reply(`\`\`\`🌵 Se ha producido un problema.\n> Usa ${usedPrefix}report para informarlo.\`\`\`\n\n${error.message}`)
 }
 }
 
