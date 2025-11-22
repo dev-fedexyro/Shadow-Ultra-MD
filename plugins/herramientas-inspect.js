@@ -116,7 +116,7 @@ let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, 
         case isCommand1:
             let inviteCode
             
-            if (!text) return conn.reply(m.chat, '\`\`\`ⓘ Ingrese un enlace de grupo/comunidad o canal.\`\`\``', m)
+            if (!text) return conn.reply(m.chat, '\`\`\`ⓘ Ingrese un enlace de grupo/comunidad o canal.\`\`\`', m)
             
             let info
             try {
