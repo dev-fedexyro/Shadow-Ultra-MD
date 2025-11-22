@@ -14,38 +14,38 @@ async function fbdl(url) {
       'Sec-Fetch-Mode': 'navigate',
       'Sec-Fetch-Site': 'none',
       'Cache-Control': 'max-age=0'
-    };
-    const html = (await axios.get(url, { headers })).data;
+};
+    const html = (await axios.get(url, { headers})).data;
     const hd = html.match(/"browser_native_hd_url":"(.*?)"/)?.[1]?.replace(/\\\//g, "/") || null;
     const sd = html.match(/"browser_native_sd_url":"(.*?)"/)?.[1]?.replace(/\\\//g, "/") || null;
-    return { status: "success", hd, sd };
-  } catch (e) {
-    return { status: "error", message: e.message };
-  }
+    return { status: "success", hd, sd};
+} catch (e) {
+    return { status: "error", message: e.message};
+}
 }
 
-let handler = async (m, { conn, text }) => {
+let handler = async (m, { conn, text}) => {
   if (!text) {
-    return conn.reply(m.chat, `☃️ *Uso correcto:*\n.fb <link de Facebook>\n\nEjemplo:\n.fb https://www.facebook.com/share/v/...`, m, global.rcanal);
-  }
+    return conn.reply(m.chat, `\`\`\`🌱 Uso correcto:*\n/fb <link de Facebook>...\`\`\``);
+}
 
-  await conn.reply(m.chat, '⏳ *Descargando video, espera...*', m, global.rcanal);
+  await conn.reply(m.chat, '\`\`\`🌵 Descargando video, espera...\`\`\`');
 
   try {
     const result = await fbdl(text);
-    if (result.status !== "success") throw result.message;
+    if (result.status!== "success") throw result.message;
 
     const url = result.hd || result.sd;
-    if (!url) throw '⚠️ No se encontró video descargable. Revisa el enlace.';
+    if (!url) throw '🌱 No se encontró video descargable. Revisa el enlace.';
 
     await conn.sendMessage(m.chat, {
-      video: { url },
-      caption: `☘ *Video descargado correctamente*\n\n🔗 *Fuente:* Facebook\n🎥 *Calidad:* ${result.hd ? 'HD 🚀' : 'SD 💡'}`
-    }, { quoted: m, contextInfo: global.rcanal.contextInfo });
+      video: { url},
+      caption: `🌱 *Video descargado correctamente*\n\n🔗 *Fuente:* Facebook\n🎥 *Calidad:* ${result.hd? 'HD 🌵': 'SD 🌱'}`
+}, { quoted: m});
 
-  } catch (e) {
-    await conn.reply(m.chat, `❌ *Error al descargar*\n> ${e}`, m, global.rcanal);
-  }
+} catch (e) {
+    await conn.reply(m.chat, `\`\`\`❌ Error al descargar\`\`\`\n> ${e}`);
+}
 };
 
 handler.help = ['fb', 'facebook'];
