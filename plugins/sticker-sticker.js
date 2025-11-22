@@ -1,4 +1,3 @@
-// plugins/sticker.js
 import fs from 'fs'
 import path from 'path'
 import Jimp from 'jimp'
@@ -13,31 +12,29 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     let q = m.quoted ? m.quoted : m
     let mime = (q.msg || q).mimetype || q.mediaType || ''
 
-    // Si es imagen o webp o video (video lo procesamos sólo para sticker sin reducir)
     if (/webp|image|video/g.test(mime)) {
-      // Vídeo: comprobar duración
+
       if (/video/g.test(mime) && (q.msg || q).seconds > 15) {
-        return conn.reply(m.chat, '🚫 El video no puede durar más de *15 segundos* para sticker.', m)
+        return conn.reply(m.chat, '\`\`\`🚫 El video no puede durar más de *15 segundos* para sticker.\`\`\`', m)
       }
 
       let data = await q.download?.()
-      if (!data) return conn.reply(m.chat, '📌 Envía una imagen o video para crear un sticker.', m)
+      if (!data) return conn.reply(m.chat, '\`\`\`🌵 Envía una imagen o video para crear un sticker.\`\`\`', m)
 
       let reducedNoteSent = false
 
-      // Solo intentamos reducir si es imagen (no webp y no video)
       if (/image/.test(mime) || (/webp/.test(mime) && !/video/.test(mime))) {
         try {
           const { buffer: reducedBuffer, reduced } = await tryAutoReduce(data)
           if (reduced) {
             data = reducedBuffer
             reducedNoteSent = true
-            // Avisar al usuario (opcional)
+
             try { await conn.reply(m.chat, '🔄 Tu imagen era muy grande/alta — se redujo automáticamente antes de crear el sticker.', m) } catch (e) {}
           }
         } catch (err) {
           console.warn('No se pudo reducir la imagen:', err)
-          // seguimos con la imagen original si falla la reducción
+      
         }
       }
 
@@ -74,11 +71,11 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       try {
         await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m)
       } catch (e) {
-        // fallback si sendFile falla
+
         try { await conn.sendMessage(m.chat, { sticker: fs.readFileSync(stiker) }, { quoted: m }) } catch (err) {}
       }
     } else {
-      return conn.reply(m.chat, '\`\`\`Envía una imagen o video para convertirlo en sticker (máx 15s en vídeo)\`\`\`', m)
+      return conn.reply(m.chat, '\`\`\`🌱 Envía una imagen o video para convertirlo en sticker (máx 15s en vídeo)\`\`\`', m)
     }
   }
 }
@@ -89,22 +86,15 @@ handler.command = ['s', 'sticker', 'stiker']
 
 export default handler
 
-// ----------------------
-// Helpers
-// ----------------------
-
-// Devuelve { buffer, reduced: boolean }
 async function tryAutoReduce(buffer) {
-  // Leer imagen con Jimp desde buffer
+
   const img = await Jimp.read(buffer)
   const width = img.bitmap.width
   const height = img.bitmap.height
 
-  // Regla: si la imagen es "muy alta" respecto a su ancho (ej: tall images)
-  // o si supera dimensiones máximas, la reducimos.
-  // Puedes afinar estos valores.
-  const MAX_DIM = 1000            // tamaño máximo recomendado (px)
-  const TALL_RATIO = 1.8         // si height > width * 1.8 se considera "larga"
+
+  const MAX_DIM = 1000
+  const TALL_RATIO = 1.8
   const MUST_REDUCE = (height > MAX_DIM || width > MAX_DIM || height > width * TALL_RATIO || width > height * TALL_RATIO)
 
   if (!MUST_REDUCE) {
