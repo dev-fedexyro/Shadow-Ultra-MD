@@ -40,7 +40,7 @@ let handler = async (m, { conn, text}) => {
 
     await conn.sendMessage(m.chat, {
       video: { url},
-      caption: `\`\`\`🌱 *Video descargado correctamente\`\`\`\n\n🔗 *Fuente:* Facebook\n🎥 *Calidad:* ${result.hd? 'HD 🌵': 'SD 🌱'}`
+      caption: `\`\`\`🌱 𝖵𝗂𝖽𝖾𝗈 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝖽𝗈 𝖼𝗈𝗋𝗋𝖾𝖼𝗍𝖺𝗆𝖾𝗇𝗍𝖾\`\`\`\n\n🔗 *𝖥𝗎𝖾𝗇𝗍𝖾:* Facebook\n🎥 *𝖢𝖺𝗅𝗂𝖽𝖺𝖽:* ${result.hd? 'HD 🌵': 'SD 🌱'}`
 }, { quoted: m});
 
 } catch (e) {
