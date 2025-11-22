@@ -27,7 +27,5 @@ const handler = async (m, { conn, command }) => {
 handler.help = ['shadow']; 
 handler.tags = ['herramientas']; 
 handler.command = ['shadow']; 
-handler.customPrefix = /^(shadow|Shadow)$/i;
-handler.fail = null;
 
 export default handler;
