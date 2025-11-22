@@ -3,43 +3,6 @@ import _ from "lodash"
 import axios from 'axios'
 import { Buffer } from 'buffer'
 
-async function sendCustomPedido(m, conn, texto) {
-  try {
-    const img = 'https://files.catbox.moe/p0fk5h.jpg'
-    const res = await axios.get(img, { responseType: 'arraybuffer' })
-    const imgBuffer = Buffer.from(res.data)
-
-    const orderMessage = {
-      orderId: 'FAKE-' + Date.now(),
-      thumbnail: imgBuffer,
-      itemCount: 1,
-      status: 1,
-      surface: 1,
-      message: texto,
-      orderTitle: 'Shadow - inspect',
-      token: null,
-      sellerJid: null,
-      totalAmount1000: '0',
-      totalCurrencyCode: 'GTQ',
-      contextInfo: {
-        externalAdReply: {
-          title: botname,
-          body: '',
-          thumbnailUrl: img,
-          mediaType: 1,
-          renderLargerThumbnail: true
-        }
-      }
-    }
-
-    const msg = generateWAMessageFromContent(m.chat, { orderMessage }, { quoted: m })
-    await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
-  } catch (err) {
-    console.error(err)
-    m.reply('⚠️ Error enviando el pedido.', m)
-  }
-}
-
 let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, isOwner, isROwner }) => {
     const isCommand1 = /^(inspect|inspeccionar)\b$/i.test(command)
     
@@ -152,7 +115,8 @@ let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, 
     switch (true) {     
         case isCommand1:
             let inviteCode
-            if (!text) return sendCustomPedido(m, conn, '*ⓘ* `Ingrese un enlace de grupo/comunidad o canal.`')
+            
+            if (!text) return conn.reply(m.chat, '\`\`\`ⓘ Ingrese un enlace de grupo/comunidad o canal.\`\`\``', m)
             
             let info
             try {
@@ -364,4 +328,4 @@ function processObject(obj, prefix = "", preview, handle = null) {
         }
     })
     return caption.trim()
-      }
+    }
