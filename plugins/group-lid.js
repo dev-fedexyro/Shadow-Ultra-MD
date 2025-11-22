@@ -97,7 +97,7 @@ const handler = async (m, { conn, text, participants, parseUserTargets }) => {
 };
 
 handler.help = ['lid'];
-handler.tags = ['grupo'];
+handler.tags = ['group'];
 handler.command = /^(lid)$/i;
 handler.group = true;
 handler.admin = true;
