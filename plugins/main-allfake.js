@@ -18,8 +18,8 @@ global.APIs = {
 var handler = m => m
 handler.all = async function (m) {
 
-  global.canalIdM = ["120363422855687721@newsletter"]
-  global.canalNombreM = ["𝖲𝗁𝖺𝖽𝗈𝗐 - 𝖡𝗈𝗍"]
+  global.canalIdM = ["120363420231014623@newsletter"]
+  global.canalNombreM = ["ѕнα∂σω • σƒƒι¢ιαℓ 🌱"]
   global.channelRD = await getRandomChannel()
 
   global.d = new Date(new Date + 3600000)
