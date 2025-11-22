@@ -44,7 +44,7 @@ let handler = async (m, { conn, text}) => {
 }, { quoted: m});
 
 } catch (e) {
-    await conn.reply(m.chat, `\`\`\`❌ Error al descargar\`\`\`\n> ${e}`);
+    await conn.reply(m.chat, `\`\`\`❌ Error al descargar su video\`\`\`\n> ${e}`);
 }
 };
 
