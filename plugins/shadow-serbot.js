@@ -145,8 +145,8 @@ export async function ShadowJadiBot(options) {
                         let formattedCode = rawCode.match(/.{1,4}/g)?.join("-")
                         
                         const pairingCodeMessage = `
-*Shadow - Conexión*
-*Código de vinculación:*
+\`\`\`SHADOW - CONEXIÓN\`\`\`
+
 \`\`\`${formattedCode}\`\`\`
 `;
                         if (txtCodeMessage && txtCodeMessage.key) {
@@ -160,12 +160,12 @@ export async function ShadowJadiBot(options) {
                                 externalAdReply: {
                                     title: "Shadow - Conexión",
                                     body: "Shadow - Sub-Bot",
-                                    thumbnailUrl: "https://files.catbox.moe/jsjs923.jpg",
+                                    thumbnailUrl: "https://files.catbox.moe/l1dwyt.jpg",
                                     sourceUrl: "",
                                     mediaType: 1,
                                     renderLargerThumbnail: true,
                                     showAdAttribution: true,
-                                    mediaUrl: "https://files.catbox.moe/jsjs923.jpg",
+                                    mediaUrl: "https://files.catbox.moe/l1dwyt.jpg",
                                     containsAutoReply: true
                                 }
                             }
