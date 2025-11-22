@@ -1,9 +1,7 @@
-import { getUrlFromDirectPath, generateWAMessageFromContent } from "@whiskeysockets/baileys"
+import { getUrlFromDirectPath } from "@whiskeysockets/baileys"
 import _ from "lodash"
-import axios from 'axios'
-import { Buffer } from 'buffer'
 
-let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, isOwner, isROwner }) => {
+let handler = async (m, { conn, command, args, text }) => {
     const isCommand1 = /^(inspect|inspeccionar)\b$/i.test(command)
     
     if (!isCommand1) return
@@ -13,7 +11,6 @@ let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, 
     let msm = 'Ocurrió un error.'
     let icons = 'https://files.catbox.moe/p0fk5h.jpg'
     let md = 'https://github.com/dev-fedexyzz'
-    let botname = 'Inspector Bot'
 
     let fkontak = { 
         "key": { 
@@ -38,19 +35,19 @@ let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, 
     let thumb = icons
     let pp
     
-    const MetadataGroupInfo = async (res, isInviteInfo = false) => {
+    const MetadataGroupInfo = async (res) => {
         let nameCommunity = "no pertenece a ninguna Comunidad"
         let groupPicture = "No se pudo obtener"
         let inviteCode 
 
         if (res.linkedParent) {
-            let linkedGroupMeta = await conn.groupMetadata(res.linkedParent).catch(e => { return null })
+            let linkedGroupMeta = await conn.groupMetadata(res.linkedParent).catch(() => null)
             nameCommunity = linkedGroupMeta ? "\n" + ("`Nombre:` " + linkedGroupMeta.subject || "") : nameCommunity
         }
-        pp = await conn.profilePictureUrl(res.id, 'image').catch(e => { return null })
+        pp = await conn.profilePictureUrl(res.id, 'image').catch(() => null)
         
         if (!text) {
-             inviteCode = await conn.groupInviteCode(m.chat).catch(e => { return null })
+             inviteCode = await conn.groupInviteCode(m.chat).catch(() => null)
         }
         
         const formatParticipants = (participants) =>
@@ -58,7 +55,9 @@ let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, 
                 ? participants.map((user, i) => `${i + 1}. @${user.id?.split("@")[0]}${user.admin === "superadmin" ? " (superadmin)" : user.admin === "admin" ? " (admin)" : ""}`).join("\n")
                 : "No encontrado"
         
-        let caption = `🆔 *Identificador del grupo:*\n${res.id || "No encontrado"}\n\n` +
+        const idHeader = res.isCommunity ? '*ID COMUNIDAD*' : '*ID GRUPO*';
+
+        let caption = `${idHeader}\n*ID:* ${res.id || "No encontrado"}\n\n` +
             `👑 *Creado por:*\n${res.owner ? `@${res.owner?.split("@")[0]}` : "No encontrado"} ${res.creation ? `el ${formatDate(res.creation)}` : "(Fecha no encontrada)"}\n\n` +
             `🏷️ *Nombre:*\n${res.subject || "No encontrado"}\n\n` +
             `✏️ *Nombre cambiado por:*\n${res.subjectOwner ? `@${res.subjectOwner?.split("@")[0]}` : "No encontrado"} ${res.subjectTime ? `el ${formatDate(res.subjectTime)}` : "(Fecha no encontrada)"}\n\n` +
@@ -82,20 +81,23 @@ let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, 
     }
 
     const inviteGroupInfo = async (groupData) => {
-        const { id, subject, subjectOwner, subjectTime, size, creation, owner, desc, descId, linkedParent, restrict, announce, isCommunity, isCommunityAnnounce, joinApprovalMode, memberAddMode, ephemeralDuration } = groupData
+        const { id, subject, subjectOwner, subjectTime, size, creation, owner, desc, descId, linkedParent, isCommunity, isCommunityAnnounce, joinApprovalMode, announce } = groupData
         let nameCommunity = "no pertenece a ninguna Comunidad"
         let groupPicture = "No se pudo obtener"
         if (linkedParent) {
-            let linkedGroupMeta = await conn.groupMetadata(linkedParent).catch(e => { return null })
+            let linkedGroupMeta = await conn.groupMetadata(linkedParent).catch(() => null)
             nameCommunity = linkedGroupMeta ? "\n" + ("`Nombre:` " + linkedGroupMeta.subject || "") : nameCommunity
         }
-        pp = await conn.profilePictureUrl(id, 'image').catch(e => { return null })
+        pp = await conn.profilePictureUrl(id, 'image').catch(() => null)
         const formatParticipants = (participants) =>
             participants && participants.length > 0
                 ? participants.map((user, i) => `${i + 1}. @${user.id?.split("@")[0]}${user.admin === "superadmin" ? " (superadmin)" : user.admin === "admin" ? " (admin)" : ""}`).join("\n")
                 : "No encontrado"
+        
+        const idHeader = isCommunity ? '*ID COMUNIDAD*' : '*ID GRUPO*';
 
-        let caption = `🆔 *Identificador del grupo:*\n${id || "No encontrado"}\n\n` +
+
+        let caption = `${idHeader}\n*ID:* ${id || "No encontrado"}\n\n` +
             `👑 *Creado por:*\n${owner ? `@${owner?.split("@")[0]}` : "No encontrado"} ${creation ? `el ${formatDate(creation)}` : "(Fecha no encontrada)"}\n\n` +
             `🏷️ *Nombre:*\n${subject || "No encontrado"}\n\n` +
             `✏️ *Nombre cambiado por:*\n${subjectOwner ? `@${subjectOwner?.split("@")[0]}` : "No encontrado"} ${subjectTime ? `el ${formatDate(subjectTime)}` : "(Fecha no encontrada)"}\n\n` +
@@ -162,14 +164,13 @@ let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, 
                 
                 if (channelUrl) {
                     try {
-                        newsletterInfo = await conn.newsletterMetadata("invite", channelUrl).catch(e => { return null })
+                        newsletterInfo = await conn.newsletterMetadata("invite", channelUrl).catch(() => null)
                         if (!newsletterInfo) return conn.reply(m.chat, `No se encontró información del canal. Verifique que el enlace sea correcto.`, m)       
                         
                         
                         const channelID = newsletterInfo.id || 'ID no encontrado'
                         
-                        let caption = `*ID DEL CANAL:*\n` +
-                                      `*ID:* ${channelID}\n\n`
+                        const caption = `*ID DEL CANAL*\n*ID:* ${channelID}\n\n`
                                       
                         
                         if (newsletterInfo?.preview) {
@@ -328,4 +329,4 @@ function processObject(obj, prefix = "", preview, handle = null) {
         }
     })
     return caption.trim()
-    }
+            }
