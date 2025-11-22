@@ -18,6 +18,8 @@ import { Boom } from '@hapi/boom'
 import { makeWASocket, protoType, serialize } from './lib/simple.js'
 import { Low, JSONFile } from 'lowdb'
 import store from './lib/store.js'
+
+
 const { proto } = (await import('@whiskeysockets/baileys')).default
 import pkg from 'google-libphonenumber'
 const { PhoneNumberUtil } = pkg
@@ -269,7 +271,7 @@ const botPath = join(rutaJadiBot, gjbts)
 if (existsSync(botPath) && statSync(botPath).isDirectory()) {
 const readBotPath = readdirSync(botPath)
 if (readBotPath.includes(creds)) {
-ShadowJadiBot({ pathShadowJadiBot: botPath, m: null, conn, args: '', usedPrefix: '/', command: 'serbot' })
+// Código eliminado que llamaba a ShadowJadiBot
 }}}}}
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'))
@@ -335,7 +337,7 @@ const [ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find] = test
 const s = global.support = { ffmpeg, ffprobe, ffmpegWebp, convert, magick, gm, find }
 Object.freeze(global.support)
 }
-// Tmp
+
 setInterval(async () => {
 const tmpDir = join(__dirname, 'tmp')
 try {
