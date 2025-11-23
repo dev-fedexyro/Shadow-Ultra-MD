@@ -3,7 +3,6 @@ let tags = {
   anime: 'ᴀɴɪᴍᴇ & ᴡᴀɪғᴜs',
   buscador: 'ʙᴜsᴄᴀᴅᴏʀᴇs',
   downloader: 'ᴅᴇsᴄᴀʀɢᴀs',
-  jutsus: 'ᴊᴜᴛsᴜs ɴᴀʀᴜᴛᴏ',
   economy: 'ᴇᴄᴏɴᴏᴍɪ́ᴀ & ᴊᴜᴇɢᴏs',
   fun: 'ᴊᴜᴇɢᴏs ᴅɪᴠᴇʀᴛɪᴅᴏs',
   group: 'ғᴜɴᴄɪᴏɴᴇs ᴅᴇ ɢʀᴜᴘᴏ',
