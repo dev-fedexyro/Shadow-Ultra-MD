@@ -80,7 +80,7 @@ let handler = async (m, { conn, usedPrefix }) => {
 
 ╰┈□ ɪɴғᴏ-ʙᴏᴛ
 ❐ _ᴛɪᴇᴍᴘᴏ ᴀᴄᴛɪᴠᴏ:_ ${uptime}
-❐ _ᴘʀᴇғɪᴊᴏ:_ `\`\`\`[ ${prefix} ]`\`\`\`
+❐ _ᴘʀᴇғɪᴊᴏ:_ ```[ ${prefix} ]```
 ❐ _ɢʀᴜᴘᴏs ᴀᴄᴛɪᴠᴏs:_ ${groupsCount}
 ❐ _ғᴇᴄʜᴀ:_ ${new Date().toLocaleString('es-ES', { timeZone: 'America/Argentina/Buenos_Aires'})}
 `.trim();
@@ -88,11 +88,10 @@ let handler = async (m, { conn, usedPrefix }) => {
     let menuText = infoUser + '\n\n';
 
     for (const [tag, cmds] of Object.entries(categories)) {
-        const tagName = tags[tag] || `╭─「 ${tag.toUpperCase()} 」
-`;
+        const tagName = tags[tag] || ` ${tag.toUpperCase()} `;
         
         if (cmds.length > 0) {
-            menuText += `${tagName}\n${cmds.map(cmd => `> ➩ ${cmd}`).join('\n')}\n\n`;
+            menuText += `${tagName}\n${cmds.map(cmd => `➩ ${cmd}`).join('\n')}\n\n`;
         }
     }
 
