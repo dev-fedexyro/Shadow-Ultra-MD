@@ -1,22 +1,35 @@
 import fs from 'fs';
-import { WAMessageStubType} from '@whiskeysockets/baileys';
+import { WAMessageStubType } from '@whiskeysockets/baileys';
 
-async function generarBienvenida({ conn, userId, groupMetadata, chat}) {
+async function generarBienvenida({ conn, userId, groupMetadata, chat }) {
   const username = `@${userId.split('@')[0]}`;
-  const pp = await conn.profilePictureUrl(userId, 'image').catch(() => 'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745522645448.jpeg');
-  const fecha = new Date().toLocaleDateString("es-ES", { timeZone: "America/Mexico_City", day: 'numeric', month: 'long', year: 'numeric'});
-  const groupSize = groupMetadata.participants.length + 1;
+  
+  const pp = await conn.profilePictureUrl(userId, 'image').catch(() => 
+    'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745522645448.jpeg'
+  );
+
+  const fecha = new Date().toLocaleDateString("es-ES", { 
+    timeZone: "America/Mexico_City", 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric'
+  });
+  
+  const groupSize = groupMetadata.participants.length; 
   const desc = groupMetadata.desc?.toString() || 'Sin descripción';
-  const mensaje = (chat.sWelcome || 'Edita con el comando "setwelcome"')
-.replace(/{usuario}/g, username)
-.replace(/{grupo}/g, `*${groupMetadata.subject}*`)
-.replace(/{desc}/g, desc);
-  const caption = `❀ Bienvenido a *"_${groupMetadata.subject}_"*\n✰ _Usuario_ » ${username}\n● ${mensaje}\n◆ _Ahora somos ${groupSize} Miembros._\nꕥ Fecha » ${fecha}\n૮꒰ ˶• ᴗ •˶꒱ა Disfruta tu estadía en el grupo!\n> *➮ Puedes usar _#help_ para ver la lista de comandos.*`;
+  
+  const mensajeBase = chat.sWelcome || 'Edita con el comando "setwelcome"';
+
+  const mensaje = mensajeBase
+    .replace(/{usuario}/g, username)
+    .replace(/{grupo}/g, `*${groupMetadata.subject}*`)
+    .replace(/{desc}/g, desc);
+  
+  const caption = `🌱 Bienvenido a *"_${groupMetadata.subject}_"*\n🌾 _Usuario_ » ${username}\n🌵 ${mensaje}\n🌑 _Ahora somos ${groupSize} Miembros._\n🌾 Fecha » ${fecha}\n🌱 Disfruta tu estadía en el grupo!\n> *➮ Puedes usar _#help_ para ver la lista de comandos.*`;
 
   return {
     pp,
     caption,
-    mentions: [userId],
     contextInfo: {
       externalAdReply: {
         title: 'Shadow - Bot',
@@ -26,27 +39,40 @@ async function generarBienvenida({ conn, userId, groupMetadata, chat}) {
         renderLargerThumbnail: true,
         showAdAttribution: true,
         sourceUrl: null
-}
-}
-};
+      }
+    }
+  };
 }
 
-async function generarDespedida({ conn, userId, groupMetadata, chat}) {
+async function generarDespedida({ conn, userId, groupMetadata, chat }) {
   const username = `@${userId.split('@')[0]}`;
-  const pp = await conn.profilePictureUrl(userId, 'image').catch(() => 'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745522645448.jpeg');
-  const fecha = new Date().toLocaleDateString("es-ES", { timeZone: "America/Mexico_City", day: 'numeric', month: 'long', year: 'numeric'});
-  const groupSize = groupMetadata.participants.length - 1;
+  
+  const pp = await conn.profilePictureUrl(userId, 'image').catch(() => 
+    'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745522645448.jpeg'
+  );
+
+  const fecha = new Date().toLocaleDateString("es-ES", { 
+    timeZone: "America/Mexico_City", 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric'
+  });
+
+  const groupSize = groupMetadata.participants.length; 
   const desc = groupMetadata.desc?.toString() || 'Sin descripción';
-  const mensaje = (chat.sBye || 'Edita con el comando "setbye"')
-.replace(/{usuario}/g, username)
-.replace(/{grupo}/g, groupMetadata.subject)
-.replace(/{desc}/g, `*${desc}*`);
-  const caption = `❀ Adiós de *"_${groupMetadata.subject}_"*\n✰ _Usuario_ » ${username}\n● ${mensaje}\n◆ _Ahora somos ${groupSize} Miembros._\nꕥ Fecha » ${fecha}\n(˶˃⤙˂˶) Te esperamos pronto!\n> *➮ Puedes usar _#help_ para ver la lista de comandos.*`;
+  
+  const mensajeBase = chat.sBye || 'Edita con el comando "setbye"';
+
+  const mensaje = mensajeBase
+    .replace(/{usuario}/g, username)
+    .replace(/{grupo}/g, groupMetadata.subject)
+    .replace(/{desc}/g, `*${desc}*`);
+    
+  const caption = `🌱 Adiós de *"_${groupMetadata.subject}_"*\n🌾 _Usuario_ » ${username}\n🌵 ${mensaje}\n🌑 _Ahora somos ${groupSize} Miembros._\n🌾 Fecha » ${fecha}\n🌱 ¡Te esperamos pronto!\n> *➮ Puedes usar _#help_ para ver la lista de comandos.*`;
 
   return {
     pp,
     caption,
-    mentions: [userId],
     contextInfo: {
       externalAdReply: {
         title: 'Shadow - Bot',
@@ -56,39 +82,54 @@ async function generarDespedida({ conn, userId, groupMetadata, chat}) {
         renderLargerThumbnail: true,
         showAdAttribution: true,
         sourceUrl: null
-}
-}
-};
+      }
+    }
+  };
 }
 
 let handler = m => m;
 
-handler.before = async function (m, { conn, participants, groupMetadata}) {
-  if (!m.messageStubType ||!m.isGroup) return!0;
-
-  const primaryBot = global.db.data.chats[m.chat].primaryBot;
-  if (primaryBot && conn.user.jid!== primaryBot) throw!1;
+handler.before = async function (m, { conn, groupMetadata }) {
+  if (!m.messageStubType || !m.isGroup) {
+    return true;
+  }
 
   const chat = global.db.data.chats[m.chat];
-  const userId = m.messageStubParameters[0];
+  const primaryBot = chat.primaryBot;
+  if (primaryBot && conn.user.jid !== primaryBot) {
+    return false;
+  }
+
+  const userId = m.messageStubParameters && m.messageStubParameters[0];
+  if (!userId) {
+    return false;
+  }
 
   if (chat.welcome && m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD) {
-    const { pp, caption, mentions, contextInfo} = await generarBienvenida({ conn, userId, groupMetadata, chat});
+    const { pp, caption, contextInfo } = await generarBienvenida({ conn, userId, groupMetadata, chat });
+    
     await conn.sendMessage(m.chat, {
-      image: { url: pp},
+      image: { url: pp },
       caption,
+      mentions: [userId], 
       contextInfo
-}, { quoted: null});
+    }, { quoted: null });
+    
+  } else if (chat.welcome && 
+             (m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE || 
+              m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE)) {
+    const { pp, caption, contextInfo } = await generarDespedida({ conn, userId, groupMetadata, chat });
+    
+    await conn.sendMessage(m.chat, {
+      image: { url: pp },
+      caption,
+      mentions: [userId], 
+      contextInfo
+    }, { quoted: null });
   }
-  if (chat.welcome && (m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE || m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE)) {
-    const { pp, caption, mentions, contextInfo} = await generarDespedida({ conn, userId, groupMetadata, chat});
-    await conn.sendMessage(m.chat, {
-      image: { url: pp},
-      caption,
-      contextInfo
-}, { quoted: null});
-}
+
+  return true; 
 };
 
-export { generarBienvenida, generarDespedida};
+export { generarBienvenida, generarDespedida };
 export default handler;
