@@ -87,13 +87,12 @@ let handler = async (m, { conn, usedPrefix }) => {
         }
     }
 
-    const VIDEO_URL = 'https://cdn.russellxz.click/14cf14e9.mp4';
-    const THUMBNAIL_URL = 'https://files.catbox.moe/12zb63.jpg';
+    const videoUrl = 'https://cdn.russellxz.click/14cf14e9.mp4';
+    const thumbnailUrl = 'https://files.catbox.moe/12zb63.jpg';
 
     try {
         const canalNombre = global.canalNombreM?.[0] || 'Shadow Bot - Canal';
         const canalId = global.canalIdM?.[0] || ''; 
-        const sourceUrl = global.gataMiau || 'https://github.com/Shadows-club';
         
         await conn.sendMessage(m.chat, {
             text: menuText,
@@ -101,9 +100,8 @@ let handler = async (m, { conn, usedPrefix }) => {
                 externalAdReply: {
                     title: canalNombre,
                     body: '𝖲𝗁𝖺𝖽𝗈𝗐 - 𝖡𝗈ƚ',
-                    mediaUrl: VIDEO_URL, 
-                    thumbnailUrl: THUMBNAIL_URL,
-                    sourceUrl: sourceUrl,
+                    mediaUrl: videoUrl, 
+                    thumbnailUrl: thumbnailUrl,
                     mediaType: 2, 
                     renderLargerThumbnail: true
                 },
