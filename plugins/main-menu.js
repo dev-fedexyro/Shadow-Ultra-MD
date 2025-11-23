@@ -91,8 +91,7 @@ let handler = async (m, { conn, usedPrefix }) => {
         const tagName = tags[tag] || ` ${tag.toUpperCase()} `;
         
         if (cmds.length > 0) {
-            menuText += `╭─「 ${tagName} 」
-\n${cmds.map(cmd => `> ➩ ${cmd}`).join('\n')}\n\n`;
+            menuText += `╭─「 ${tagName} 」\n${cmds.map(cmd => `> ➩ ${cmd}`).join('\n')}\n\n`;
         }
     }
 
