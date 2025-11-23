@@ -88,7 +88,8 @@ let handler = async (m, { conn, usedPrefix }) => {
     let menuText = infoUser + '\n\n';
 
     for (const [tag, cmds] of Object.entries(categories)) {
-        const tagName = tags[tag] || `𓂂${tag.toUpperCase()}*`;
+        const tagName = tags[tag] || `╭─「 ${tag.toUpperCase()} 」
+`;
         
         if (cmds.length > 0) {
             menuText += `${tagName}\n${cmds.map(cmd => `> ➩ ${cmd}`).join('\n')}\n\n`;
