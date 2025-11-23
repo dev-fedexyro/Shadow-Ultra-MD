@@ -82,35 +82,62 @@ let handler = async (m, { conn, usedPrefix }) => {
         }
     }
 
+    const nativeButtons = [
+        {
+          name: 'cta_url',
+          buttonParamsJson: JSON.stringify({ 
+            display_text: '🍉 ᴄᴀɴᴀʟ ᴏғɪᴄɪᴀʟ', 
+            url: 'https://whatsapp.com/channel/0029VbBvZH5LNSa4ovSSbQ2N' 
+          })
+        }
+    ];
+
     try {
-        const canalNombre = global.canalNombreM?.[0] || 'Shadow Bot - Canal';
-        const canalId = global.canalIdM?.[0] || ''; 
         const thumbnailUrl = global.fgThumb || 'https://files.catbox.moe/12zb63.jpg';
         const sourceUrl = global.gataMiau || 'https://github.com/Shadows-club';
         
-        await conn.sendMessage(m.chat, {
-            text: menuText,
+        const templateMessage = {
+            image: { url: thumbnailUrl },
+            caption: menuText,
+            footer: '𝖲𝗁𝖺ᴅᴏᴡ - 𝖡ᴏƚ',
+            templateButtons: nativeButtons,
             contextInfo: {
+                mentionedJid: [m.sender],
+                isForwarded: true,
                 externalAdReply: {
-                    title: canalNombre,
-                    body: '𝖲𝗁𝖺𝖽𝗈𝗐 - 𝖡𝗈ƚ',
+                    title: 'Shadow Bot - Canal',
+                    body: '𝖲𝗁𝖺ᴅᴏᴡ - 𝖡ᴏƚ',
                     thumbnailUrl: thumbnailUrl,
                     sourceUrl: sourceUrl,
                     mediaType: 1,
                     renderLargerThumbnail: true
-                },
-                mentionedJid: [m.sender],
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: canalId && canalId.includes('@newsletter') ? {
-                    newsletterJid: canalId,
-                    newsletterName: '𝖲𝗁𝖺𝖽𝗈𝗐 - 𝖡𝗈ƚ',
-                    serverMessageId: -1
-                } : undefined
+                }
             }
-        }, { quoted: m });
+        };
+
+        await conn.sendMessage(m.chat, templateMessage, { quoted: m });
     } catch (e) {
         console.error('❌ Error al enviar el menú:', e);
-        await m.reply('❌ Ocurrió un error al enviar el menú. Por favor, reporta este error al dueño del bot.');
+        try {
+             await conn.sendMessage(m.chat, {
+                text: menuText,
+                contextInfo: {
+                    externalAdReply: {
+                        title: 'Shadow Bot - Canal',
+                        body: '𝖲𝗁𝖺ᴅᴏᴡ - 𝖡ᴏƚ',
+                        thumbnailUrl: global.fgThumb || 'https://files.catbox.moe/12zb63.jpg',
+                        sourceUrl: global.gataMiau || 'https://github.com/Shadows-club',
+                        mediaType: 1,
+                        renderLargerThumbnail: true
+                    },
+                    mentionedJid: [m.sender],
+                    isForwarded: true,
+                }
+            }, { quoted: m });
+        } catch(e2) {
+            console.error('❌ Error al enviar el menú de respaldo:', e2);
+            await m.reply('❌ Ocurrió un error al enviar el menú. Por favor, reporta este error al dueño del bot.');
+        }
     }
 };
 
