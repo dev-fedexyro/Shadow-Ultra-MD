@@ -1,7 +1,7 @@
 import yts from "yt-search"
 import fetch from "node-fetch"
 
-const handler = async (m, { conn, text, command, m, global.rcanal }) => {
+const handler = async (m, { conn, text, command }) => {
   if (!text) return m.reply(`*— Comando de Descarga —*
 
 Proporciona el nombre o el enlace de YouTube del video/audio que deseas buscar o descargar.`)
