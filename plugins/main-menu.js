@@ -82,7 +82,7 @@ let handler = async (m, { conn, usedPrefix }) => {
         const cmds = categories[tag].sort(); 
         
         if (cmds.length > 0) {
-            menuText += `╭─「${tagName}」\n${cmds.map(cmd => `➩ ${cmd}`).join('\n')}\n\n`;
+            menuText += `╭─「${tagName}」\n${cmds.map(cmd => `> ➩ ${cmd}`).join('\n')}\n\n`;
         }
     }
 
