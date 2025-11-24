@@ -30,7 +30,7 @@ const handler = async (m, { conn}) => {
 }
 };
 
-handler.help = ['delete'];
+handler.help = ['del', 'delete'];
 handler.tags = ['group'];
 handler.command = ['del', 'delete'];
 handler.group = true;
