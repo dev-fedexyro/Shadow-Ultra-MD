@@ -31,21 +31,21 @@ const handler = async (m, { conn, text, usedPrefix, command}) => {
 
     if (['play', 'yta', 'ytmp3', 'playaudio'].includes(command)) {
       const audio = await getAud(url)
-      if (!audio?.url) throw '❌ No se pudo obtener el audio.'
+      if (!audio || !audio.url) throw '❌ No se pudo obtener el audio.'
       m.reply(`✅ *Audio listo. Servidor:* \`${audio.api}\``)
       await conn.sendMessage(m.chat, { audio: { url: audio.url}, fileName: `${title}.mp3`, mimetype: 'audio/mpeg'}, { quoted: m})
       await m.react('🎶')
-} else if (['play2', 'ytv', 'ytmp4', 'mp4'].includes(command)) {
+    } else if (['play2', 'ytv', 'ytmp4', 'mp4'].includes(command)) {
       const video = await getVid(url)
-      if (!video?.url) throw '❌ No se pudo obtener el video.'
+      if (!video || !video.url) throw '❌ No se pudo obtener el video.'
       m.reply(`✅ *Vídeo listo. Servidor:* \`${video.api}\``)
       await conn.sendFile(m.chat, video.url, `${title}.mp4`, `🎬 ${title}`, m)
       await m.react('📽️')
-}
-} catch (e) {
+    }
+  } catch (e) {
     await m.react('⚠️')
     return conn.reply(m.chat, typeof e === 'string'? e: '🚨 Ocurrió un error inesperado.\nUsa *' + usedPrefix + 'report* para informarlo.\n\n' + e.message, m)
-}
+  }
 }
 
 handler.command = handler.help = ['play', 'yta', 'ytmp3', 'play2', 'ytv', 'ytmp4', 'playaudio', 'mp4']
@@ -93,4 +93,4 @@ async function fetchFromApis(apis) {
     await new Promise(resolve => setTimeout(resolve, 500))
   }
   return null
-        }
+}
