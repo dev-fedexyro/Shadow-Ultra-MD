@@ -37,7 +37,7 @@ No se encontraron videos para tu búsqueda. Intenta con un término más preciso
     const isVideo = ["play2", "playvid", "ytv", "ytmp4"].includes(command)
 
     if (isAudio) {
-      await downloadMedia(conn, m, url, title, thumbnail, "mp3")
+      await downloadMedia(conn, m, url, title, thumbnail, "mp3") 
     } else if (isVideo) {
       await downloadMedia(conn, m, url, title, thumbnail, "mp4")
     } else {
@@ -89,7 +89,17 @@ Espere un momento, se está procesando el archivo...`
       await conn.sendMessage(m.chat, {
         audio: { url: data.result.url },
         mimetype: "audio/mpeg",
-        fileName: cleanTitle
+        fileName: cleanTitle,
+        contextInfo: {
+          externalAdReply: {
+            title: "Shadow descarga",
+            body: "Shadow bot",
+            thumbnailUrl: thumbnail,
+            sourceUrl: url,
+            mediaType: 2,
+            mediaUrl: url
+          }
+        }
       }, { quoted: m })
     } else {
       await conn.sendMessage(m.chat, {
@@ -99,13 +109,6 @@ Espere un momento, se está procesando el archivo...`
       }, { quoted: m })
     }
 
-    const doneMsg = `*— Descarga Completada —*
-
-*Título:* ${data.result.title || title}
-*Tipo:* ${type === "mp3" ? "Audio (MP3)" : "Video (MP4)"}
-El archivo ha sido enviado con éxito.`
-
-    await m.reply(doneMsg)
     await m.react("✅")
 
   } catch (error) {
