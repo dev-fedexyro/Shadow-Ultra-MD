@@ -1,126 +1,33 @@
-import { WAMessageStubType } from '@whiskeysockets/baileys';
+import { URL_WAV, URL_GIF } from "../config.js"
 
-const TIME_ZONE = "America/Santo_Domingo"; 
+export async function participantsUpdate(conn, m) {
+    if (!m.isGroup || !m.type) return
 
-const DEFAULT_WELCOME_PP = 'https://files.catbox.moe/12zb63.jpg';
-const DEFAULT_BYE_PP = 'https://files.catbox.moe/12zb63.jpg';
-
-async function generateWelcomeMessage({ conn, userId, groupMetadata, chat }) {
-  const username = `@${userId.split('@')[0]}`;
-  
-  const pp = await conn.profilePictureUrl(userId, 'image').catch(() => DEFAULT_WELCOME_PP);
-  
-  const formattedDate = new Date().toLocaleDateString("es-ES", { timeZone: TIME_ZONE, day: 'numeric', month: 'long', year: 'numeric' });
-  const groupSize = groupMetadata.participants.length + 1;
-  const desc = groupMetadata.desc?.toString() || 'Sin descripción establecida.';
-
-  let caption;
-  const subject = groupMetadata.subject;
-
-  if (chat.welcomeText) {
-    caption = chat.welcomeText
-      .replace(/@user/g, username)
-      .replace(/@subject/g, subject)
-      .replace(/@desc/g, desc);
-  } else {
-    const defaultWelcomeMessage = `👋 **¡BIENVENID@ AL GRUPO!** 🎉
+    const user = m.participants[0]
     
-¡Hola @user! 
-Te damos una cordial bienvenida a **@subject**.
-
-Esperamos que disfrutes tu estancia y respetes las normas.
-
----
-**✨ INFORMACIÓN DEL GRUPO**
-*👥 Miembros:* ${groupSize}
-*📅 Fecha de Ingreso:* ${formattedDate}
-*📜 Descripción:*
-${desc}
----
+    const groupName = (await conn.groupMetadata(m.chat)).subject
     
-_¡Que tengas un excelente día!_`;
+    const userNameMention = `@${user.split('@')[0]}`
 
-    caption = defaultWelcomeMessage
-      .replace(/@user/g, username)
-      .replace(/@subject/g, subject);
-  }
-  
-  return { pp, caption, mentions: [userId] };
-}
+    try {
+        if (m.type === 'add') {
+            const welcomeText = `¡Bienvenido/a a ${groupName} ${userNameMention}!`
+            
+            await conn.sendMessage(m.chat, { 
+                text: welcomeText,
+                mentions: [user] 
+            })
 
-async function generateGoodbyeMessage({ conn, userId, groupMetadata, chat }) {
-  const username = `@${userId.split('@')[0]}`;
-  
-  const pp = await conn.profilePictureUrl(userId, 'image').catch(() => DEFAULT_BYE_PP);
-  
-  const formattedDate = new Date().toLocaleDateString("es-ES", { timeZone: TIME_ZONE, day: 'numeric', month: 'long', year: 'numeric' });
-  const groupSize = groupMetadata.participants.length - 1;
+        } else if (m.type === 'remove') {
+            const goodbyeText = `Un usuario salió del grupo ${groupName}. ¡Adiós ${userNameMention}!`
+            
+            await conn.sendMessage(m.chat, { 
+                text: goodbyeText,
+                mentions: [user] 
+            })
+        }
 
-  let caption;
-  const subject = groupMetadata.subject;
-
-  if (chat.byeText) {
-    caption = chat.byeText
-      .replace(/@user/g, username)
-      .replace(/@subject/g, subject);
-  } else {
-    const defaultByeMessage = `🚪 **HASTA PRONTO** 😞
-    
-@user ha abandonado el grupo **@subject**.
-Su presencia se echará de menos.
-
----
-**📉 ESTADO ACTUAL**
-*Miembros restantes:* ${groupSize}
-*📅 Fecha de Salida:* ${formattedDate}
----
-    
-_¡Mucha suerte en tus futuros proyectos!_`;
-
-    caption = defaultByeMessage
-      .replace(/@user/g, username)
-      .replace(/@subject/g, subject);
-  }
-  
-  return { pp, caption, mentions: [userId] };
-}
-
-let handler = m => m;
-
-handler.before = async function (m, { conn, groupMetadata }) {
-    if (!m.messageStubType || !m.isGroup) return !0;
-
-    const chat = global.db.data.chats[m.chat];
-    if (!chat) return !0;
-
-    const primaryBot = chat.botPrimario;
-    if (primaryBot && conn.user.jid !== primaryBot) return !0;
-
-    const userId = m.messageStubParameters[0];
-
-    if (chat.welcome && m.messageStubType == WAMessageStubType.GROUP_PARTICIPANT_ADD) {
-        const { pp, caption, mentions } = await generateWelcomeMessage({ conn, userId, groupMetadata, chat });
-        
-        await conn.sendMessage(m.chat, { 
-            image: { url: pp }, 
-            caption, 
-            mentions
-        }, { quoted: null });
+    } catch (e) {
+        console.error('Error en participantsUpdate:', e)
     }
-
-    if (chat.welcome && 
-        (m.messageStubType == WAMessageStubType.GROUP_PARTICIPANT_REMOVE || 
-         m.messageStubType == WAMessageStubType.GROUP_PARTICIPANT_LEAVE)) {
-        
-        const { pp, caption, mentions } = await generateGoodbyeMessage({ conn, userId, groupMetadata, chat });
-        
-        await conn.sendMessage(m.chat, { 
-            image: { url: pp }, 
-            caption, 
-            mentions
-        }, { quoted: null });
-    }
-};
-
-export { generateWelcomeMessage, generateGoodbyeMessage };
-export default handler;
+}
