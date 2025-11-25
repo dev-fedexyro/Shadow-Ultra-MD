@@ -70,13 +70,13 @@ const handler = async (m, { conn, usedPrefix, command, participants }) => {
 
         const totalSubs = activeBotsJids.length - 1;
 
-        const message = `\`\`\`「 🌱 」 Lista de Bots Activos (Shadow-Bots)\`\`\`
+        const message = `*「 ☆ 」 Lista de Bots Activos (Shadow-Bots)*
 
 *🌑 Bots Totales:* ${activeBotsJids.length}
 *↳ Principal:* 1
 *↳ Sub-Bots:* ${totalSubs}
 
-*☆ Bots en este Grupo:* ${groupBotsJids.length}
+*★ Bots en este Grupo:* ${groupBotsJids.length}
 
 ${botsGroupDetails}`;
 
