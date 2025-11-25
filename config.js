@@ -28,8 +28,6 @@ global.dev = "𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚"
 global.author = "𝘍𝘦𝘥𝘦 𝘜𝘤𝘩𝘪𝘩𝘢"
 global.etiqueta = "𝘍𝘦𝘥𝘦 𝘜𝘤𝘩𝘪𝘩𝘢"
 global.currency = "Yenes"
-global.banner = "https://files.catbox.moe/"
-global.icono = "https://files.catbox.moe/"
 global.catalogo = fs.readFileSync('./storage/catalogo.png')
 
 // ===
