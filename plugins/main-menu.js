@@ -3,45 +3,53 @@ import { join} from 'path'
 import { xpRange} from '../lib/levelling.js'
 
 let tags = {
-  info: 'ɪɴғᴏʀᴍᴀᴄɪᴏ́ɴ',
-  anime: 'ᴀɴɪᴍᴇ & ᴡᴀɪғᴜs',
-  buscador: 'ʙᴜsᴄᴀᴅᴏʀᴇs',
-  downloader: 'ᴅᴇsᴄᴀʀɢᴀs',
-  economy: 'ᴇᴄᴏɴᴏᴍɪ́ᴀ & ᴊᴜᴇɢᴏs',
-  fun: 'ᴊᴜᴇɢᴏs ᴅɪᴠᴇʀᴛɪᴅᴏs',
-  group: 'ғᴜɴᴄɪᴏɴᴇs ᴅᴇ ɢʀᴜᴘᴏ',
-  ai: 'ɪɴᴛᴇʟɪɢᴇɴᴄɪᴀ ᴀʀᴛғɪᴄɪᴀʟ',
-  game: 'ᴊᴜᴇɢᴏs ᴄʟᴀ́sɪᴄᴏs',
-  serbot: 'sᴜʙ-ʙᴏᴛs',
-  main: 'ᴄᴏᴍᴀɴᴅᴏs ᴘʀɪɴᴄɪᴘᴀʟᴇs',
-  nable: 'ᴀᴄᴛɪᴠᴀʀ / ᴅᴇsᴀᴄᴛɪᴠᴀʀ',
-  nsfw: 'ɴsғᴡ',
-  owner: 'ᴅᴜᴇñᴏ / ᴀᴅᴍɪɴ',
-  sticker: 'sᴛɪᴄᴋᴇʀs & ʟᴏɢᴏs',
-  herramientas: 'ʜᴇʀʀᴀᴍɪᴇɴᴛᴀs'
-};
+  main: '🌟 PRINCIPAL',
+  info: 'ℹ️ INFORMACIÓN',
+  ai: '🤖 INTELIGENCIA ARTIFICIAL',
+  herramientas: '🔧 HERRAMIENTAS',
+  downloader: '📥 DESCARGAS',
+  sticker: '🖼️ STICKERS & LOGOS',
+  fun: '🎈 JUEGOS DIVERTIDOS',
+  game: '🎮 JUEGOS CLÁSICOS',
+  economy: '💰 ECONOMÍA & JUEGOS',
+  buscador: '🔎 BUSCADORES',
+  anime: '🌸 ANIME & WAIFUS',
+  group: '👥 FUNCIONES DE GRUPO',
+  nable: '⚙️ ACTIVAR / DESACTIVAR',
+  nsfw: '🔞 NSFW',
+  serbot: '📡 SUB-BOTS',
+  owner: '👑 DUEÑO / ADMIN'
+}
 
 const defaultMenu = {
   before: `
-*─ׄ─ׅ─ׄ─⭒ Bienvenido %name ⭒─ׄ─ׅ─ׄ─*
-“Hola *%name*, soy *Shadow - Bot*, %greeting”
+*╭┈┈┈「 SHADOW ULTRA MD 」┈┈┈*
+*┃* 👋 ¡Hola, **%name**!
+*┃* Soy **Shadow - Bot**, te deseo %greeting.
+*╰┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈*
 
-╭── ⭒ SHADOW ULTRA MD⭒
-│ 🍬 Modo: *Público*
-│ 📚 Baileys: *Multi Device*
-│ ⏱ Tiempo Activo: *%uptime*
-│ 👤 Usuarios: *%totalreg*
-╰─────────────── %readmore
-*─ׄ─ׅ─ׄ─⭒ MENÚ DE COMANDOS ⭒─ׄ─ׅ─ׄ─*
+*╭┈ 「 ESTADO GENERAL 」 ┈*
+*┃* 🍬 Modo: **Público**
+*┃* 📚 Baileys: **Multi Device**
+*┃* ⏱ Tiempo Activo: **%uptime**
+*┃* 👤 Usuarios Registrados: **%rtotalreg**
+*╰┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈*
+%readmore
+*╭┈ 「 NIVELES Y LÍMITES 」 ┈*
+*┃* 📈 Nivel: **%level**
+*┃* ⚡ XP Total: **%totalexp**
+*┃* 🎟️ Límite: **%limit**
+*╰┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈*
+
+*╭┈ 「 LISTA DE COMANDOS 」 ┈*
 `.trim(),
 
   header: `
-╭── ⭒ *%category*
-│ 
-`.trim(),
+*┃* 🚀 **%category**
+*┃* `.trim(),
 
-  body: '│ ➩ %cmd %islimit %isPremium',
-  footer: '╰──────────\n',
+  body: '┃ ➪ `%cmd` %islimit %isPremium',
+  footer: '*╰┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈*\n',
   after: ''
 }
 
@@ -77,11 +85,11 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
 .map(menu => menu.help.map(cmd =>
             defaultMenu.body
 .replace(/%cmd/g, menu.prefix? cmd: _p + cmd)
-.replace(/%islimit/g, menu.limit? '◜⭐◞': '')
-.replace(/%isPremium/g, menu.premium? '◜🪪◞': '')
+.replace(/%islimit/g, menu.limit? '(*Límite*)': '')
+.replace(/%isPremium/g, /%isPremium/g, menu.premium? '(*Premium*)': '')
 ).join('\n')).join('\n')
 
-        return defaultMenu.header.replace(/%category/g, tags[tag]) + '\n' + section + '\n' + defaultMenu.footer
+        return defaultMenu.header.replace(/%category/g, tags[tag]) + section + '\n' + defaultMenu.footer
 }),
       defaultMenu.after
     ].join('\n')
@@ -143,4 +151,4 @@ function getGreeting() {
   if (hour < 12) return 'una linda mañana ✨'
   if (hour < 18) return 'una linda tarde 🌇'
   return 'una linda noche 🌙'
-}
+                                                                                   }
