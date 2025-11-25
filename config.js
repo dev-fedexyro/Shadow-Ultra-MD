@@ -8,9 +8,9 @@ global.botNumber = "" //Ejemplo: 5491162424280
 
 // ===
 
-global.owner = ["5491124918653"]
+global.owner = ["5491124918653", "5491162424280"]
 global.suittag = [] 
-global.prems = []
+global.prems = ["5491124918653"]
 
 // ===
 
