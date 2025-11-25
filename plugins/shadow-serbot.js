@@ -111,26 +111,9 @@ if (qr) {
     let secret = await sock.requestPairingCode((m.sender.split`@`[0]))
     secret = secret.match(/.{1,4}/g)?.join("-")
     
-    const rawCode = Buffer.from(JSON.stringify(sock.authState.creds)).toString('base64');
-    
-    const interactiveButtons = [{
-        name: "cta_copy",
-        buttonParamsJson: JSON.stringify({
-            display_text: "Cᴏᴘɪᴀʀ Cᴏ́ᴅɪɢᴏ",
-            id: "copy-shadowbot-code",
-            copy_code: rawCode
-    })
-    }];
-    
-    const interactiveMessage = {
-        image: { url: "https://files.catbox.moe/bszv0y.jpg"},
-        caption: `*✨ ¡Tᴜ ᴄᴏ́ᴅɪɢᴏ ᴅᴇ ᴠɪɴᴄᴜʟᴀᴄɪ́ᴏɴ ᴇsᴛᴀ́ ʟɪsᴛᴏ! ✨*\n\nÚsᴀ ᴇʟ sɪɢᴜɪᴇɴᴛᴇ ᴄᴏ́ᴅɪɢᴏ ᴘᴀʀᴀ ᴄᴏɴᴇᴄᴛᴀʀᴛᴇ ᴄᴏᴍᴏ Sᴜʙ-Bᴏᴛ:\n\n> Hᴀᴢ ᴄʟɪᴄ ᴇɴ ᴇʟ ʙᴏᴛᴏ́ɴ ᴅᴇ ᴀʙᴀᴊᴏ ᴘᴀʀᴀ ᴄᴏᴘɪᴀʀʟᴏ ғᴀ́ᴄɪʟᴍᴇɴᴛᴇ.`,
-        title: "Sʜᴀᴅᴏᴡ Bᴏᴛ Oғғɪᴄɪᴀʟ",
-        footer: "Esᴛᴇ ᴄᴏ́ᴅɪɢᴏ ᴇxᴘɪʀᴀʀᴀ́ ᴇɴ 45 sᴇɢᴜɴᴅᴏs.",
-        interactiveButtons
-    };
+    const textMessage = `Vinculación por codigo\n\nCodigo: ${secret}`;
 
-    txtCode = await conn.sendMessage(m.chat, interactiveMessage, { quoted: m });
+    txtCode = await conn.sendMessage(m.chat, { text: textMessage }, { quoted: m });
     codeBot = await m.reply(secret)
     console.log(secret)
 }
