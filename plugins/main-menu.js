@@ -36,7 +36,7 @@ const defaultMenu = {
 `.trim(),
 
   header: `
-╭── ⭒ Categoría: *%category*
+╭── ⭒ *%category*
 │ Comandos disponibles:
 `.trim(),
 
