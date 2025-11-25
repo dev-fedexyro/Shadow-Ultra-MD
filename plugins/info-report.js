@@ -16,7 +16,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
     m.reply(`${emoji} El reporte se envío a mi creador, cualquier informe falso puede ocasionar baneo.`)
 }
-handler.help = ['reporte', 'report', 'reportar', 'bug', 'error'']
+handler.help = ['reporte', 'report', 'reportar', 'bug', 'error']
 handler.tags = ['info']
 handler.command = ['reporte', 'report', 'reportar', 'bug', 'error']
 
