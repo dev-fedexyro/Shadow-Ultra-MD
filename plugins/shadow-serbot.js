@@ -141,20 +141,31 @@ export async function ShadowJadiBot(options) {
                 if (global.conns.some(c => c.user?.jid === sock.user?.jid) && connection !== 'connecting') {
                 } else if (!sock.authState.creds.registered || connection === 'connecting') {
                     try {
-                        let rawCode = await sock.requestPairingCode((m.sender.split`@`[0]))
-                        let formattedCode = rawCode.match(/.{1,4}/g)?.join("-")
+                        const rawCode = await sock.requestPairingCode((m.sender.split`@`[0], "SHADOWBOT"));
+                        const formattedCode = rawCode.match(/.{1,4}/g)?.join("-")
                         
-                        const pairingCodeMessage = `
-*🔑 Vinculación con código*
-*Código:* \`\`\`${formattedCode}\`\`\`
-`;
+                        const interactiveButtons = [{
+                            name: "cta_copy",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "Copiar Código",
+                                id: "copy-shadowbot-code",
+                                copy_code: rawCode
+                            })
+                        }];
+
+                        const interactiveMessage = {
+                            image: { url: "https://files.catbox.moe/bszv0y.jpg" },
+                            caption: `*✨ ¡Tu código de vinculación está listo! ✨*\n\nUsa el siguiente código para conectarte como Sub-Bot:\n\n> Haz clic en el botón de abajo para copiarlo fácilmente.`,
+                            title: "Código de Vinculación",
+                            footer: "Este código expirará en 45 segundos.",
+                            interactiveButtons
+                        };
+                        
                         if (txtCodeMessage && txtCodeMessage.key) {
                             await conn.sendMessage(m.chat, { delete: txtCodeMessage.key });
                         }
                         
-                        txtCodeMessage = await conn.sendMessage(m.chat, { 
-                            text: pairingCodeMessage.trim()
-                        }, { quoted: m });
+                        txtCodeMessage = await conn.sendMessage(m.chat, interactiveMessage, { quoted: m });
                         
                         console.log(chalk.bold.greenBright(`Código de Vinculación para +${path.basename(pathShadowJadiBot)}: ${rawCode}`));
                     } catch (e) {
