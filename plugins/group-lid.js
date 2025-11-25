@@ -78,7 +78,7 @@ let handler = async (m, { conn, command, args, text }) => {
     }, { quoted: fkontak });
 }
 
-handler.tags = ['herramientas'];
+handler.tags = ['group'];
 handler.help = ['lid', 'lidnum', 'lid <@mención|número>'];
 handler.command = ['lid', 'lidnum'];
 
