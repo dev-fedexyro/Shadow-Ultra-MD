@@ -25,13 +25,13 @@ const sessions = 'sessions'
 const rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: '', newsletterName: channelRD.name }, externalAdReply: { title: "🔔 . : : N O T I F I C A C I Ó N : : . 💬", body: textbot, mediaUrl: null, description: null, previewType: "PHOTO", thumbnail: await (await fetch(icono)).buffer(), sourceUrl: redes, mediaType: 1, renderLargerThumbnail: false }, mentionedJid: null }}
 const pp = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || icono
 
-const nombre = `> 📝 *Nombre Actualizado:*\n> ✨ *Título:* *${m.messageStubParameters[0]}*\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
-const foto = `> 🖼️ *Imagen del Grupo Cambiada.*\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
-const edit = `> ⚙️ *Configuración de Edición:*\n> 🔒 @${usuario.split('@')[0]} ha permitido que ${m.messageStubParameters[0] == 'on' ? 'solo *Administradores*' : '*todos*'} puedan configurar el grupo.`
-const newlink = `> 🔗 *Enlace Restablecido.*\n> ♻️ Se ha generado un nuevo link de invitación.\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
-const status = `> 📢 *Estado de Mensajes:*\n> @${usuario.split('@')[0]} ha ${m.messageStubParameters[0] == 'on' ? '*CERRADO* (Solo Admins envían)' : '*ABIERTO* (Todos pueden enviar)'} el grupo.`
-const admingp = `> 👑 *ASCENSO A ADMINISTRADOR*\n> ⬆️ Usuario: @${users.split('@')[0]}\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
-const noadmingp = `> 🔻 *DESCENSO DE ADMINISTRADOR*\n> ⬇️ Usuario: @${users.split('@')[0]} (Ya no es Admin)\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
+const nombre = `\`\`\`📝 Nombre Actualizado:\`\`\`\n> ✨ *Título:* *${m.messageStubParameters[0]}*\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
+const foto = `\`\`\`🖼️ Imagen del Grupo Cambiada.\`\`\`*\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
+const edit = `\`\`\`⚙️ Configuración de Edición:\`\`\`*\n> 🔒 @${usuario.split('@')[0]} ha permitido que ${m.messageStubParameters[0] == 'on' ? 'solo *Administradores*' : '*todos*'} puedan configurar el grupo.`
+const newlink = `\`\`\`🔗 Enlace Restablecido.\`\`\`*\n> ♻️ Se ha generado un nuevo link de invitación.\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
+const status = `\`\`\`📢 Estado de Mensajes:\`\`\`\n> @${usuario.split('@')[0]} ha ${m.messageStubParameters[0] == 'on' ? '*CERRADO* (Solo Admins envían)' : '*ABIERTO* (Todos pueden enviar)'} el grupo.`
+const admingp = `\`\`\`👑 ASCENSO A ADMINISTRADOR\`\`\`\n> ⬆️ Usuario: @${users.split('@')[0]}\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
+const noadmingp = `\`\`\`🌱 DESCENSO DE ADMINISTRADOR\`\`\`\n> ⬇️ Usuario: @${users.split('@')[0]} (Ya no es Admin)\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
 
 if (chat.detect && m.messageStubType == 2) {
 const uniqid = (m.isGroup ? m.chat : m.sender).split('@')[0]
