@@ -137,42 +137,40 @@ export async function ShadowJadiBot(options) {
         async function connectionUpdate(update) {
             const { connection, lastDisconnect, isNewLogin, qr } = update
             
-            if ((qr || (connection === 'connecting' && !sock.authState.creds.registered)) && !sock.codeSent) { 
-                
-                if (global.conns.some(c => c.user?.jid === sock.user?.jid) && connection !== 'connecting') {
-                } else if (!sock.authState.creds.registered || connection === 'connecting') {
-                    try {
-                        const rawCode = await sock.requestPairingCode((m.sender.split`@`[0], "SHADOWBOT"));
-                        const formattedCode = rawCode.match(/.{1,4}/g)?.join("-")
-                        
-                        const interactiveButtons = [{
-                            name: "cta_copy",
-                            buttonParamsJson: JSON.stringify({
-                                display_text: "Cᴏᴘɪᴀʀ Cᴏ́ᴅɪɢᴏ",
-                                id: "copy-shadowbot-code",
-                                copy_code: rawCode
-                            })
-                        }];
+            const needsCode = !sock.authState.creds.registered && (connection === 'connecting' || qr);
+            
+            if (needsCode && !sock.codeSent) {
+                try {
+                    const rawCode = await sock.requestPairingCode((m.sender.split`@`[0], "SHADOWBOT"));
+                    const formattedCode = rawCode.match(/.{1,4}/g)?.join("-")
+                    
+                    const interactiveButtons = [{
+                        name: "cta_copy",
+                        buttonParamsJson: JSON.stringify({
+                            display_text: "Cᴏᴘɪᴀʀ Cᴏ́ᴅɪɢᴏ",
+                            id: "copy-shadowbot-code",
+                            copy_code: rawCode
+                        })
+                    }];
 
-                        const interactiveMessage = {
-                            image: { url: "https://files.catbox.moe/bszv0y.jpg"},
-                            caption: `*🌵 ¡Tᴜ ᴄᴏ́ᴅɪɢᴏ ᴅᴇ ᴠɪɴᴄᴜʟᴀᴄɪᴏ́ɴ ᴇsᴛᴀ́ ʟɪsᴛᴏ! 🌱*\n\nÚsᴀ ᴇʟ sɪɢᴜɪᴇɴᴛᴇ ᴄᴏ́ᴅɪɢᴏ ᴘᴀʀᴀ ᴄᴏɴᴇᴄᴛᴀʀᴛᴇ ᴄᴏᴍᴏ Sᴜʙ-Bᴏᴛ:\n\n*Cᴏ́ᴅɪɢᴏ:* ${formattedCode}\n\n> Hᴀᴢ ᴄʟɪᴄ ᴇɴ ᴇʟ ʙᴏᴛᴏ́ɴ ᴅᴇ ᴀʙᴀᴊᴏ ᴘᴀʀᴀ ᴄᴏᴘɪᴀʀʟᴏ ғᴀ́ᴄɪʟᴍᴇɴᴛᴇ.`,
-                            title: "Sʜᴀᴅᴏᴡ Bᴏᴛ Oғғɪᴄɪᴀʟ",
-                            footer: "Esᴛᴇ ᴄᴏ́ᴅɪɢᴏ ᴇxᴘɪʀᴀʀᴀ́ ᴇɴ 45 sᴇɢᴜɴᴅᴏs.",
-                            interactiveButtons
-                        };
-                        
-                        if (txtCodeMessage && txtCodeMessage.key) {
-                            await conn.sendMessage(m.chat, { delete: txtCodeMessage.key });
-                        }
-                        
-                        txtCodeMessage = await conn.sendMessage(m.chat, interactiveMessage, { quoted: m });
-                        sock.codeSent = true
-                        
-                        console.log(chalk.bold.greenBright(`Código de Vinculación para +${path.basename(pathShadowJadiBot)}: ${rawCode}`));
-                    } catch (e) {
-                        console.error(chalk.bold.red(`Error al solicitar pairing code para +${path.basename(pathShadowJadiBot)}: ${e}`));
+                    const interactiveMessage = {
+                        image: { url: "https://files.catbox.moe/bszv0y.jpg"},
+                        caption: `*🌵 ¡Tᴜ ᴄᴏ́ᴅɪɢᴏ ᴅᴇ ᴠɪɴᴄᴜʟᴀᴄɪᴏ́ɴ ᴇsᴛᴀ́ ʟɪsᴛᴏ! 🌱*\n\nÚsᴀ ᴇʟ sɪɢᴜɪᴇɴᴛᴇ ᴄᴏ́ᴅɪɢᴏ ᴘᴀʀᴀ ᴄᴏɴᴇᴄᴛᴀʀᴛᴇ ᴄᴏᴍᴏ Sᴜʙ-Bᴏᴛ:\n\n*Cᴏ́ᴅɪɢᴏ:* ${formattedCode}\n\n> Hᴀᴢ ᴄʟɪᴄ ᴇɴ ᴇʟ ʙᴏᴛᴏ́ɴ ᴅᴇ ᴀʙᴀᴊᴏ ᴘᴀʀᴀ ᴄᴏᴘɪᴀʀʟᴏ ғᴀ́ᴄɪʟᴍᴇɴᴛᴇ.`,
+                        title: "Sʜᴀᴅᴏᴡ Bᴏᴛ Oғғɪᴄɪᴀʟ",
+                        footer: "Esᴛᴇ ᴄᴏ́ᴅɪɢᴏ ᴇxᴘɪʀᴀʀᴀ́ ᴇɴ 45 sᴇɢᴜɴᴅᴏs.",
+                        interactiveButtons
+                    };
+                    
+                    if (txtCodeMessage && txtCodeMessage.key) {
+                        await conn.sendMessage(m.chat, { delete: txtCodeMessage.key });
                     }
+                    
+                    txtCodeMessage = await conn.sendMessage(m.chat, interactiveMessage, { quoted: m });
+                    sock.codeSent = true
+                    
+                    console.log(chalk.bold.greenBright(`Código de Vinculación para +${path.basename(pathShadowJadiBot)}: ${rawCode}`));
+                } catch (e) {
+                    console.error(chalk.bold.red(`Error al solicitar pairing code para +${path.basename(pathShadowJadiBot)}: ${e}`));
                 }
             }
             
@@ -192,7 +190,7 @@ export async function ShadowJadiBot(options) {
                 console.log(chalk.bold.magentaBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄⟡\n┆ La conexión (+${path.basename(pathShadowJadiBot)}) fue cerrada. Razón: ${reason}.\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄⟡`));
                 
                 if (shouldReconnect && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-                    sock.codeSent = false // Permitir un nuevo intento de código en la reconexión
+                    sock.codeSent = false
                     const delay = INITIAL_REATTEMPT_DELAY_MS * (reconnectAttempts + 1);
                     console.log(chalk.bold.yellowBright(`\n[ 🔄 RECONEXIÓN ] Intentando reconectar (+${path.basename(pathShadowJadiBot)}) en ${delay / 1000}s. Intento: ${reconnectAttempts + 1}/${MAX_RECONNECT_ATTEMPTS}`));
                     
@@ -324,4 +322,4 @@ function msToTime(duration) {
     minutes = (minutes < 10) ? '0' + minutes : minutes
     seconds = (seconds < 10) ? '0' + seconds : seconds
     return minutes + ' m y ' + seconds + ' s '
-  }
+        }
