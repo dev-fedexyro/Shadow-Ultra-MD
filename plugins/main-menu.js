@@ -76,7 +76,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
     let menuText = [
       defaultMenu.before,
 ...Object.keys(tags)
-        // Solo incluye categorías con comandos disponibles y activos
+      
         .filter(tag => help.some(menu => menu.tags.includes(tag) && menu.help))
         .map(tag => {
           let section = help.filter(menu => menu.tags.includes(tag) && menu.help)
@@ -118,7 +118,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
 
     let text = menuText.replace(new RegExp(`%(${Object.keys(replace).join('|')})`, 'g'), (_, key) => replace[key])
 
-    await m.react('🌱')
+    await m.react('⭐')
     await conn.sendMessage(m.chat, {
       video: { url: 'https://cdn.russellxz.click/14cf14e9.mp4'},
       gifPlayback: true,
@@ -129,7 +129,8 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
           title: 'Shadow Ultra MD',
           body: 'Shadow Bot',
           thumbnailUrl: 'https://files.catbox.moe/12zb63.jpg',
-          mediaType: 1,
+          mediaType: 2,
+          mediaUrl: 'https://cdn.russellxz.click/14cf14e9.mp4',
           renderLargerThumbnail: true
         }
       }
@@ -161,4 +162,4 @@ function getGreeting() {
   if (hour < 12) return 'una linda mañana ✨'
   if (hour < 18) return 'una linda tarde 🌇'
   return 'una linda noche 🌙'
-                                                                                              }
+      }
