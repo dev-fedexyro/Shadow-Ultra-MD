@@ -29,7 +29,7 @@ const nombre = `\`\`\`📚 NOMBRE ACTUALIZADO:\`\`\`\n> ✨ *Título:* *${m.mess
 const foto = `\`\`\`🍭 IMAGEN DEL GRUPO CAMBIADA.\`\`\`*\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
 const edit = `\`\`\`⚙️ CONFIGURACIÓN de EDICIÓN:\`\`\`*\n> 🔒 @${usuario.split('@')[0]} ha permitido que ${m.messageStubParameters[0] == 'on' ? 'solo *Administradores*' : '*todos*'} puedan configurar el grupo.`
 const newlink = `\`\`\`🔗 ENLACE RESTABLECIDO.\`\`\`*\n> ♻️ Se ha generado un nuevo link de invitación.\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
-const status = `\`\`\`📢 ESTADO de MENSAJES:\`\`\`\n> @${usuario.split('@')[0]} ha ${m.messageStubParameters[0] == 'on' ? '*CERRADO* (Solo Admins envían)' : '*ABIERTO* (Todos pueden enviar)'} el grupo.`
+const status = `\`\`\`📢 ESTADO DE MENSAJES:\`\`\`\n> @${usuario.split('@')[0]} ha ${m.messageStubParameters[0] == 'on' ? '*CERRADO* (Solo Admins envían)' : '*ABIERTO* (Todos pueden enviar)'} el grupo.`
 const admingp = `\`\`\`👑 ASCENSO A ADMINISTRADOR \`\`\`\n> 🌵 Usuario: @${users.split('@')[0]}\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
 const noadmingp = `\`\`\`🌱 DESCENSO DE ADMINISTRADOR\`\`\`\n> 👤 Usuario: @${users.split('@')[0]} (Ya no es Admin)\n> 👤 *Hecho por:* @${usuario.split('@')[0]}`
 
