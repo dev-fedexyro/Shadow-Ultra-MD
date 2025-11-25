@@ -1,3 +1,7 @@
+/* Codigo creado por dev-fedexyz 
+* github: https://github.com/dev-fedexyro
+* no sabes créditos puta*/
+
 let handler = async (m, { conn, command, args, text }) => {
     const isCommandId = /^(id)$/i.test(command)
     
@@ -56,7 +60,7 @@ let handler = async (m, { conn, command, args, text }) => {
                 result = `❌ No se pudo obtener el código de invitación para el ID de Canal: ${targetJid}.\n\n*Posiblemente:* ID incorrecto o Bot no autorizado.`
             }
         } catch (e) {
-            result = `❌ Error al generar URL de Canal.\n*Mensaje de Error:* ${e.message}`
+            result = `❌ Error al generar URL de Canal.\n*Mensaje de Error:* ${e.message}\n\n*SOLUCIÓN:* Si el error es "is not a function", *DEBES ACTUALIZAR LA LIBRERÍA* de tu bot (Ej: Baileys) a la última versión para que esta función esté disponible.`
             console.error("Error al obtener URL del canal:", e)
         }
 
@@ -72,7 +76,7 @@ let handler = async (m, { conn, command, args, text }) => {
                 result = `❌ No se pudo obtener el código de invitación para el ID: ${targetJid}.\n\n*Posiblemente:* El bot NO es administrador del grupo/anuncios.`
             }
         } catch (e) {
-            result = `❌ Error al generar URL de Grupo/Comunidad.\n*Mensaje de Error:* ${e.message}`
+            result = `❌ Error al generar URL de Grupo/Comunidad.\n*Mensaje de Error:* ${e.message}\n\n*SOLUCIÓN:* Si el error es "forbidden", *DEBES HACER AL BOT ADMINISTRADOR* del JID ingresado.`
             console.error("Error al obtener URL del grupo/comunidad:", e)
         }
     } else {
