@@ -6,7 +6,7 @@ let handler = async (m, { conn, command }) => {
 
   if (action === 'close') {
     await conn.groupSettingUpdate(chatId, 'announcement')
-    await conn.reply(chatId, '\`\`\`🔒 El grupo a sido cerrado por el admin. Ahora solo los administradores pueden hablar ahora.\`\`\`', m)
+    await conn.reply(chatId, '\`\`\`🔒 El grupo a sido cerrado. Ahora solo los administradores pueden hablar.\`\`\`', m)
   }
 
   if (action === 'open') {
