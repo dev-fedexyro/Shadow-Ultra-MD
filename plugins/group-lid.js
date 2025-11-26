@@ -28,11 +28,8 @@ let handler = async (m, { conn, command, args, text }) => {
     let jidResult = targetId;
     let numberClean = jidResult.split('@')[0];
     
-    if (targetLID === 'N/D' && jidResult === m.sender) {
-        const lidMatch = m.sender.match(/(\d+)@lid/);
-        if (lidMatch) {
-             targetLID = lidMatch[1] + '@lid';
-        }
+    if (targetLID === 'N/D') {
+        targetLID = numberClean + '@lid';
     }
 
     let fkontak = { 
