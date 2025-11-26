@@ -90,8 +90,8 @@ Espere un momento, se está procesando el archivo...`
         fileName: cleanTitle,
         contextInfo: {
           externalAdReply: {
-            title: "Shadow descarga",
-            body: "Shadow bot",
+            title: "Sʜᴀᴅᴏᴡ・ᴅᴇꜱᴄᴀʀɢᴀꜱ",
+            body: "Tʜᴇ Sʜᴀᴅᴏᴡ-Bᴏᴛ",
             thumbnailUrl: thumbnail,
             sourceUrl: url,
             mediaType: 2,
