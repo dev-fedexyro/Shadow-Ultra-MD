@@ -32,6 +32,7 @@ const defaultMenu = {
 │ ⏱ Tiempo Activo: *%uptime*
 │ 👤 Usuarios: *%totalreg*
 ╰─────────────── %readmore
+
 \`\`\`─ׄ─ׅ─ׄ─⭒ LISTA DE COMANDOS ⭒─ׄ─ׅ─ׄ─\`\`\`
 `.trim(),
 
