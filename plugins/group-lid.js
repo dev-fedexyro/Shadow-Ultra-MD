@@ -1,3 +1,7 @@
+/* Codigo creado por dev-fedexyz x fede Uchiha 
+* github: https://github.com/dev-fedexyro
+* no sabes créditos puta*/
+
 let handler = async (m, { conn, command, args, text, groupMetadata}) => {
   let targetId
   let title = '🌱 Obtener JID y LID'
