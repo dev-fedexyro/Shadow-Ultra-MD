@@ -5,7 +5,6 @@ import { WAMessageStubType } from '@whiskeysockets/baileys'
 const GLOBAL_CONFIG = {
     DEV_FOOTER: global.dev || 'Shadow Ultra MD',
     DEFAULT_PP_URL: 'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745522645448.jpeg',
-    WELCOME_AUDIO_URL: 'https://qu.ax/GMQnD.m4a',
     WELCOME_BG: "https://files.catbox.moe/12zb63.jpg",
     BYE_BG: "https://files.catbox.moe/12zb63.jpg",
 }
@@ -18,7 +17,6 @@ async function initFkontak() {
         const res = await fetch('https://raw.githubusercontent.com/AkiraDevX/uploads/main/uploads/1763586769709_495967.jpeg')
         thumbBuffer = Buffer.from(await res.arrayBuffer())
     } catch (e) {
-        // console.error("Error al cargar thumbnail:", e.message)
     }
 
     fkontak = {
@@ -141,7 +139,7 @@ ${customMessage}`
     return { pp, caption, imgBuffer, mentions: [userId] }
 }
 
-async function enviarMensajeEvento({ conn, m, imgBuffer, pp, caption, mentions, audioUrl = null }) {
+async function enviarMensajeEvento({ conn, m, imgBuffer, pp, caption, mentions }) {
     if (!fkontak) await initFkontak();
 
     const messageOptions = {
@@ -154,14 +152,6 @@ async function enviarMensajeEvento({ conn, m, imgBuffer, pp, caption, mentions, 
         await conn.sendMessage(m.chat, { image: imgBuffer, ...messageOptions })
     } else {
         await conn.sendMessage(m.chat, { image: { url: pp }, ...messageOptions })
-    }
-
-    if (audioUrl) {
-        await conn.sendMessage(m.chat, {
-            audio: { url: audioUrl },
-            mimetype: "audio/mpeg",
-            ptt: true
-        })
     }
 }
 
@@ -176,24 +166,31 @@ handler.before = async function (m, { conn, participants, groupMetadata }) {
         
         let userId = m.messageStubParameters[0]
         
+        if (userId && userId.endsWith('@lid')) {
+            userId = userId.replace('@lid', '@s.whatsapp.net')
+        }
+        
         if (!userId || !userId.endsWith('@s.whatsapp.net')) {
              return !0
         }
+        
+        const stubType = m.messageStubType
+        const isAdd = stubType === WAMessageStubType.GROUP_PARTICIPANT_ADD
+        
+        const isRemove = stubType === 28 ||
+                         stubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
+                         stubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE
 
-        const isAdd = m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD
-        const isRemove = m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
-                         m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE
-
-        if (!isAdd && !isRemove) return !0
+        if (!isAdd && !isRemove) {
+             return !0
+        }
 
         const { pp, caption, imgBuffer, mentions } = await generarContenidoEvento({
             conn, userId, groupMetadata, chat, isWelcome: isAdd
         })
 
-        const audioUrl = isAdd ? GLOBAL_CONFIG.WELCOME_AUDIO_URL : null
-
         await enviarMensajeEvento({
-            conn, m, imgBuffer, pp, caption, mentions, audioUrl
+            conn, m, imgBuffer, pp, caption, mentions
         })
 
     } catch (e) {
