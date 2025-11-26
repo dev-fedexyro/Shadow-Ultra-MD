@@ -121,7 +121,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
       gifPlayback: true,
       caption: text.trim(),
       mentions: [m.sender],
-      footer: '*_usa el botón de abajo para ser Sub-Bot._*',
+      footer: '*_🌵 usa el botón de abajo para ser Sub-Bot._*',
       buttons: [
         { buttonId: '.code', buttonText: { displayText: 'ꜱᴇʀ ꜱᴜʙ-ʙᴏᴛ'}, type: 1}
       ],
