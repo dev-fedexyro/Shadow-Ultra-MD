@@ -1,20 +1,23 @@
 /*
 	* Create By Brayan330
-	* Follow https://github.com/El-brayan502 
-	* Whatsapp : https://whatsapp.com/channel/0029Vb6BDQc0lwgsDN1GJ31i
+	* Follow https://github.com/El-brayan502
+	* Whatsapp: https://whatsapp.com/channel/0029Vb6BDQc0lwgsDN1GJ31i
 */
 
 import https from 'https'
-import baileys, { generateWAMessageFromContent } from '@whiskeysockets/baileys'
+import baileys, { generateWAMessageFromContent} from '@whiskeysockets/baileys'
 import axios from 'axios'
-import { Buffer } from 'buffer'
+import { Buffer} from 'buffer'
 
 async function sendAlbumMessage(conn, jid, medias, options = {}) {
-  if (typeof jid !== 'string') throw new TypeError('jid debe ser string')
+  if (typeof jid!== 'string') throw new TypeError('jid debe ser string')
   if (medias.length < 1) throw new RangeError('Se requieren al menos 1 imagen')
 
   const caption = options.caption || ''
-  const delay = !isNaN(options.delay) ? options.delay : 500
+  const delay =!isNaN(options.delay)? options.delay: 500
+
+  const quoted = options.quoted
+  const hasQuotedContext = quoted?.key && quoted?.message
 
   const album = await baileys.generateWAMessageFromContent(
     jid,
@@ -23,35 +26,35 @@ async function sendAlbumMessage(conn, jid, medias, options = {}) {
       albumMessage: {
         expectedImageCount: medias.filter(m => m.type === 'image').length,
         expectedVideoCount: medias.filter(m => m.type === 'video').length,
-        ...(options.quoted ? {
+...(hasQuotedContext? {
           contextInfo: {
-            remoteJid: options.quoted.key.remoteJid,
-            fromMe: options.quoted.key.fromMe,
-            stanzaId: options.quoted.key.id,
-            participant: options.quoted.quoted.key.participant || options.quoted.key.remoteJid,
-            quotedMessage: options.quoted.message
-          }
-        } : {})
-      }
-    },
+            remoteJid: quoted.key.remoteJid,
+            fromMe: quoted.key.fromMe,
+            stanzaId: quoted.key.id,
+            participant: quoted.quoted?.key?.participant || quoted.key.remoteJid,
+            quotedMessage: quoted.message
+}
+}: {})
+}
+},
     {}
-  )
+)
 
-  await conn.relayMessage(album.key.remoteJid, album.message, { messageId: album.key.id })
+  await conn.relayMessage(album.key.remoteJid, album.message, { messageId: album.key.id})
 
   for (let i = 0; i < medias.length; i++) {
-    const { type, data } = medias[i]
+    const { type, data} = medias[i]
     const img = await baileys.generateWAMessage(
       album.key.remoteJid,
-      { [type]: { ...data }, ...(i === 0 ? { caption } : {}) },
-      { upload: conn.waUploadToServer }
-    )
+      { [type]: {...data},...(i === 0? { caption}: {})},
+      { upload: conn.waUploadToServer}
+)
     img.message.messageContextInfo = {
-      messageAssociation: { associationType: 1, parentMessageKey: album.key }
-    }
-    await conn.relayMessage(img.key.remoteJid, img.message, { messageId: img.key.id })
+      messageAssociation: { associationType: 1, parentMessageKey: album.key}
+}
+    await conn.relayMessage(img.key.remoteJid, img.message, { messageId: img.key.id})
     await baileys.delay(delay)
-  }
+}
 
   return album
 }
@@ -61,8 +64,8 @@ const getInitialAuth = () => new Promise((resolve, reject) => {
     hostname: 'id.pinterest.com',
     path: '/',
     method: 'GET',
-    headers: { 'User-Agent': 'Mozilla/5.0' }
-  }
+    headers: { 'User-Agent': 'Mozilla/5.0'}
+}
   https.get(options, res => {
     const cookies = res.headers['set-cookie']
     if (cookies) {
@@ -71,20 +74,20 @@ const getInitialAuth = () => new Promise((resolve, reject) => {
       if (csrfCookie && pinterestSessCookie) {
         const csrftoken = csrfCookie.split(';')[0].split('=')[1]
         const sess = pinterestSessCookie.split(';')[0]
-        resolve({ csrftoken, cookieHeader: `csrftoken=${csrftoken}; ${sess}` })
+        resolve({ csrftoken, cookieHeader: `csrftoken=${csrftoken}; ${sess}`})
         return
-      }
-    }
+}
+}
     reject(new Error('No se pudo obtener el token CSRF o la cookie de sesión.'))
-  }).on('error', e => reject(e))
+}).on('error', e => reject(e))
 })
 
 const searchPinterestAPI = async (query, limit) => {
   try {
-    const { csrftoken, cookieHeader } = await getInitialAuth()
+    const { csrftoken, cookieHeader} = await getInitialAuth()
     let results = [], bookmark = null, keepFetching = true
     while (keepFetching && results.length < limit) {
-      const postData = { options: { query, scope: 'pins', bookmarks: bookmark ? [bookmark] : [] }, context: {} }
+      const postData = { options: { query, scope: 'pins', bookmarks: bookmark? [bookmark]: []}, context: {}}
       const sourceUrl = `/search/pins/?q=${encodeURIComponent(query)}`
       const dataString = `source_url=${encodeURIComponent(sourceUrl)}&data=${encodeURIComponent(JSON.stringify(postData))}`
       const options = {
@@ -99,55 +102,54 @@ const searchPinterestAPI = async (query, limit) => {
           'X-CSRFToken': csrftoken,
           'X-Pinterest-Source-Url': sourceUrl,
           Cookie: cookieHeader
-        }
-      }
-
-      const responseBody = await new Promise((resolve, reject) => {
+}
+	}
+	const responseBody = await new Promise((resolve, reject) => {
         const req = https.request(options, res => {
           let body = ''
           res.on('data', chunk => body += chunk)
           res.on('end', () => resolve(body))
-        })
+})
         req.on('error', e => reject(e))
         req.write(dataString)
         req.end()
-      })
+})
 
       const jsonResponse = JSON.parse(responseBody)
       if (jsonResponse.resource_response?.data?.results) {
         const pins = jsonResponse.resource_response.data.results
-        pins.forEach(pin => { if (pin.images?.['736x']) results.push(pin.images['736x'].url) })
+        pins.forEach(pin => { if (pin.images?.['736x']) results.push(pin.images['736x'].url)})
         bookmark = jsonResponse.resource_response.bookmark
         if (!bookmark || pins.length === 0) keepFetching = false
-      } else keepFetching = false
-    }
+} else keepFetching = false
+}
     return results.slice(0, limit)
-  } catch (e) {
+} catch (e) {
     throw new Error(e.message)
-  }
+}
 }
 
-let handler = async (m, { conn, args }) => {
+let handler = async (m, { conn, args}) => {
   try {
     const text = args.join(' ')
     if (!text) return m.reply('\`\`\`ⓘ Por favor, ingresa lo que deseas buscar en Pinterest.\`\`\`')
 
     const parts = text.split(',')
     const query = parts[0].trim()
-    const limit = parts[1] ? Math.min(parseInt(parts[1].trim()), 12) : 12
+    const limit = parts[1]? Math.min(parseInt(parts[1].trim()), 12): 12
 
     const res = await searchPinterestAPI(query, limit)
     if (!res.length) return m.reply(`⚠️ No se encontraron resultados para "${query}".`)
 
-    const medias = res.map(url => ({ type: 'image', data: { url } }))
-    await sendAlbumMessage(conn, m.chat, medias, { caption: `✨ Resultados de Pinterest - "${query}"`, quoted: m })
+    const medias = res.map(url => ({ type: 'image', data: { url}}))
+    await sendAlbumMessage(conn, m.chat, medias, { caption: `✨ Resultados de Pinterest - "${query}"`, quoted: m})
 
-  } catch (e) {
+} catch (e) {
     return m.reply(`⚠️ Se produjo un error:\n${e.message}`)
-  }
+}
 }
 
-handler.help = ['pin', 'pinterest'];
+handler.help = ['pin', 'pinterest']
 handler.tags = ['buscador']
-handler.command = ['pin', 'pinterest'];
+handler.command = ['pin', 'pinterest']
 export default handler
