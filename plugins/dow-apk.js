@@ -1,37 +1,34 @@
-import { search, download} from 'aptoide-scraper';
+import { search, download} from 'aptoide-scraper'
 
-const rwait = '⏳';
-const done = '✅';
-
-const handler = async (m, { conn, usedPrefix, text}) => {
+const handler = async (m, { conn, usedPrefix, command, text}) => {
   if (!text) {
-    return conn.reply(m.chat, '🍃 Por favor, ingrese el nombre de la APK que desea descargar.', m);
+    return conn.reply(m.chat, '🌱 Por favor, ingrese el nombre de la APK que desea descargar.', m)
 }
 
   try {
-    await m.react(rwait);
-    conn.reply(m.chat, '🌿 Descargando la aplicación, por favor espere...', m);
+    await m.react('🕒')
 
-    const results = await search(text);
-    if (!results.length) {
-      return conn.reply(m.chat, '❌ No se encontraron resultados para esa búsqueda.', m);
+    const results = await search(text)
+    if (!results || results.length === 0) {
+      await m.react('⚠️')
+      return conn.reply(m.chat, '❌ No se encontraron resultados para esa búsqueda.', m)
 }
 
-    const appData = await download(results[0].id);
-    const { name, package: pkg, lastup, size, icon, dllink} = appData;
+    const app = await download(results[0].id)
+    const { name, package: pkg, lastup, size, icon, dllink} = app
 
-    const infoMessage = `*📥 APTOIDE - DESCARGA DE APK*\n\n` +
-                        `☁️ *Nombre:* ${name}\n` +
-                        `🔖 *Paquete:* ${pkg}\n` +
-                        `🚩 *Última actualización:* ${lastup}\n` +
-                        `⚖️ *Tamaño:* ${size}`;
+    const info = `*乂  APTOIDE - DESCARGAS 乂*\n\n` +
+                 `≡ Nombre: ${name}\n` +
+                 `≡ Paquete: ${pkg}\n` +
+                 `≡ Última actualización: ${lastup}\n` +
+                 `≡ Tamaño: ${size}`
 
-    await conn.sendFile(m.chat, icon, 'thumbnail.jpg', infoMessage, m);
-    await m.react(done);
+    await conn.sendFile(m.chat, icon, 'thumbnail.jpg', info, m)
 
-    const sizeMB = parseFloat(size.replace(' MB', '').replace(',', '.'));
+    const sizeMB = parseFloat(size.replace(' MB', '').replace(',', '.'))
     if (size.includes('GB') || sizeMB> 999) {
-      return conn.reply(m.chat, '⚠️ El archivo es demasiado pesado para enviarlo por este medio.', m);
+      await m.react('⚠️')
+      return conn.reply(m.chat, '⚠️ El archivo es demasiado pesado para enviarlo por este medio.', m)
 }
 
     await conn.sendMessage(
@@ -43,17 +40,25 @@ const handler = async (m, { conn, usedPrefix, text}) => {
         caption: null
 },
       { quoted: m}
-);
+)
+
+    await m.react('✅')
 } catch (error) {
-    console.error('Error al descargar APK:', error);
-    conn.reply(m.chat, `🍂 Ocurrió un error al intentar descargar la aplicación.\nUsa *${usedPrefix}report* para informarlo.\n\n${error.message}`, m);
+    console.error('Error al descargar APK:', error)
+    await m.react('✖️')
+    return conn.reply(
+      m.chat,
+      `⚠︎ Error en descargar su apk.\n` +
+      `${error.message}`,
+      m
+)
 }
-};
+}
 
-handler.tags = ['downloader'];
-handler.help = ['apk', 'modapk', 'aptoide'];
-handler.command = ['apk', 'modapk', 'aptoide'];
-handler.group = true;
-handler.register = true;
+handler.tags = ['descargas']
+handler.help = ['apk', 'modapk', 'aptoide']
+handler.command = ['apk', 'modapk', 'aptoide']
+handler.group = true
+handler.premium = true
 
-export default handler;
+export default handler
