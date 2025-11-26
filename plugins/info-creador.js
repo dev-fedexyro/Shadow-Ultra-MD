@@ -9,7 +9,7 @@ TEL;type=CELL;waid=5491124918653:+5491124918653
 ADR;type=WORK:;;2-chōme-7-5 Fuchūchō;Izumi;Osaka;594-0071;Japan
 URL;type=WORK:https://www.instagram.com/dev-fedexyz13
 X-WA-BIZ-NAME:Ｓｈａｄｏｗ - Ｂｏｔ
-X-WA-BIZ-DESCRIPTION:ꜱʜᴀᴅᴏᴡ ᴜᴄʜɪʜᴀ
+X-WA-BIZ-DESCRIPTION:© 𝘚𝘩𝘢𝘥𝘰𝘸 - 𝘉𝘰𝘵 • 𝘍𝘦𝘥𝘦 𝘜𝘤𝘩𝘪𝘩𝘢
 X-WA-BIZ-HOURS:Mo-Su 00:00-23:59
 END:VCARD`;
 
@@ -21,7 +21,7 @@ END:VCARD`;
         },
         message: {
             contactMessage: {
-                displayName: "𝘍𝘦𝘥𝘦 𝘜𝘤𝘩𝘪𝘩𝘢",
+                displayName: "𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚",
                 vcard,
             },
         },
@@ -31,7 +31,7 @@ END:VCARD`;
         m.chat,
         {
             contacts: {
-                displayName: "𝘍𝘦𝘥𝘦 𝘜𝘤𝘩𝘪𝘩𝘢",
+                displayName: "𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚",
                 contacts: [{ vcard }],
             },
             contextInfo: {
