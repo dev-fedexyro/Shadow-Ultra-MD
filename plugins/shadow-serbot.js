@@ -227,10 +227,7 @@ export async function ShadowJadiBot(options) {
 
                 if (options.fromCommand) {
                     m?.chat ? await conn.reply(m.chat, 
-                        `@${m.sender.split('@')[0]}, *¡Genial! Ya eres parte de la familia Sub-Bots.*\n\n` +
-                        `> *Tu Sub-Bot estará activo hasta el:*\n` +
-                        `> *${dateStr}*\n\n` +
-                        `> *En caso de que se desconecte, usa el "token" y gracias por el apoyo. Cualquier error contacta al owner 📪*\n> Subbot guardado en la carpeta *Jadibot*`, 
+                        `@${m.sender.split('@')[0]}, 🌵 *Genial ya eres parte de la familia Sub-Bots*`, 
                         m, 
                         global.rcanal
                     ) : '';
@@ -309,4 +306,4 @@ function msToTime(duration) {
     minutes = (minutes < 10) ? '0' + minutes : minutes
     seconds = (seconds < 10) ? '0' + seconds : seconds
     return minutes + ' m y ' + seconds + ' s '
-}
+        }
