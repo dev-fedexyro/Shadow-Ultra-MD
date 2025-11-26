@@ -173,7 +173,12 @@ handler.before = async function (m, { conn, participants, groupMetadata }) {
         if (!global.db.data.chats[m.chat] || !global.db.data.chats[m.chat].welcome) return !0
 
         const chat = global.db.data.chats[m.chat]
-        const userId = m.messageStubParameters[0]
+        
+        let userId = m.messageStubParameters[0]
+        
+        if (!userId || !userId.endsWith('@s.whatsapp.net')) {
+             return !0
+        }
 
         const isAdd = m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD
         const isRemove = m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
@@ -192,10 +197,10 @@ handler.before = async function (m, { conn, participants, groupMetadata }) {
         })
 
     } catch (e) {
-        console.error("Error en el handler de eventos (welcome/bye):", e)
+        console.error("Error critico en el evento (welcome/bye):", e)
         const errorTarget = m.key.remoteJid || 'el chat'
         await conn.sendMessage(errorTarget, {
-            text: `Error critico al procesar el evento: ${e.message}`,
+            text: `ATENCIÓN: Error critico al procesar el evento de grupo. Detalles: ${e.message}`,
         })
     }
 }
