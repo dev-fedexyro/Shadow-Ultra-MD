@@ -1,8 +1,8 @@
 let handler = async (m, { conn }) => {
     const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:𝘋𝘦𝘷-𝘧𝘦𝘥𝘦𝘹𝘺𝘻
-ORG:𝘋𝘦𝘷-𝘧𝘦𝘥𝘦𝘹𝘺𝘻
+FN:𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚
+ORG:𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚
 TITLE:Epictetus, Enchiridion — Chapter 1 (verse 1)
 EMAIL;type=INTERNET:fedelanyt20@gmail.com 
 TEL;type=CELL;waid=5491124918653:+5491124918653
