@@ -11,7 +11,7 @@ let handler = async (m, { conn, command, args, text}) => {
       targetId = mentionMatch[1] + '@s.whatsapp.net'
 } else {
       const number = text.replace(/\D/g, '')
-      if (number.length> 7) {
+      if (number.length > 7) {
         targetId = number + '@s.whatsapp.net'
 }
 }
