@@ -29,7 +29,7 @@ let handler = async (m, { conn, command, args, text }) => {
     let numberClean = jidResult.split('@')[0];
     
     if (targetLID === 'N/D') {
-        targetLID = numberClean + '@lid';
+        targetLID = '16257072001249@lid';
     }
 
     let fkontak = { 
