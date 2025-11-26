@@ -1,14 +1,23 @@
-let handler = async (m, { conn, command, args, text}) => {
+let handler = async (m, { conn, command, args, text, groupMetadata}) => {
   let targetId
   let title = '🌱 Obtener JID y LID'
   let targetLID = null
 
   if (m.quoted) {
     targetId = m.quoted.sender
+    if (m.quoted.participant && m.quoted.participant.lid) {
+        targetLID = m.quoted.participant.lid
+    }
 } else if (text) {
     const mentionMatch = text.match(/@(\d+)/)
     if (mentionMatch) {
       targetId = mentionMatch[1] + '@s.whatsapp.net'
+      if (groupMetadata && groupMetadata.participants) {
+          const participant = groupMetadata.participants.find(p => p.id === targetId)
+          if (participant && participant.lid) {
+              targetLID = participant.lid
+          }
+      }
 } else {
       const number = text.replace(/\D/g, '')
       if (number.length > 7) {
@@ -20,12 +29,20 @@ let handler = async (m, { conn, command, args, text}) => {
   if (!targetId) {
     targetId = m.sender
     title = '🌱 Tu JID y LID'
+    if (groupMetadata && groupMetadata.participants) {
+        const participant = groupMetadata.participants.find(p => p.id === m.sender)
+        if (participant && participant.lid) {
+            targetLID = participant.lid
+        }
+    }
 }
 
   const jidResult = targetId
   const numberClean = jidResult.split('@')[0]
 
-  targetLID = `${numberClean}@lid`
+  if (!targetLID) {
+    targetLID = `${numberClean}@lid`
+  }
 
   const fkontak = {
     key: {
