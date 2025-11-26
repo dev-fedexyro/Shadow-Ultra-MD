@@ -23,19 +23,21 @@ let tags = {
 
 const defaultMenu = {
   before: `
-*─ׄ─ׅ─ׄ─⭒ 𝑩𝒊𝒆𝒏𝒗𝒆𝒏𝒊𝒅𝒐 %name ⭒─ׄ─ׅ─ׄ─*
-“Hola %name, soy *_Shadow-Bot_*, %greeting”
+────────────── ⭒ ──────────────
 
-╭── \`\`\`ꜱʜᴀᴅᴏᴡ ᴜʟᴛʀᴀ ᴍᴅ\`\`\`
-│ 🌵 Modo: *Privado*
-│ 📚 Baileys: *Multi Device*
-│ ⏱ Tiempo Activo: *%uptime*
-│ 👤 Usuarios: *%totalreg*
-╰─────────────── %readmore
+Hola %name, soy *Shadow-Bot*.
+%greeting, estoy aquí para ayudarte.
 
-\`\`\`─ׄ─ׅ─ׄ─⭒ LISTA DE COMANDOS ⭒─ׄ─ׅ─ׄ─\`\`\`
+🌵 Modo: *Privado*
+📚 Motor: *Baileys MD*
+⏱ Tiempo activo: *%uptime*
+👥 Usuarios registrados: *%totalreg*
+
+%readmore
+
+*LISTA DE COMANDOS DISPONIBLES*
 `.trim(),
-
+  
   header: `
 ╭── ⭒ *%category* 
 `.trim(),
