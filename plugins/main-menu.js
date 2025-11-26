@@ -37,8 +37,7 @@ const defaultMenu = {
 `.trim(),
 
   header: `
-╭── ⭒ *%category* 
-`.trim(),
+╭── ⭒ *%category* `.trim(),
 
   body: '│ ➩ %cmd %islimit %isPremium',
   footer: '╰──────────\n',
@@ -55,6 +54,8 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
     let uptime = clockString(_uptime)
     let totalreg = Object.keys(global.db.data.users).length
     let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered).length
+    
+    let channel = 'https://whatsapp.com/channel/0029VbBG4i2GE56rSgXsqw2W'
 
     let help = Object.values(global.plugins).filter(plugin =>!plugin.disabled).map(plugin => ({
       help: Array.isArray(plugin.help)? plugin.help: [plugin.help],
@@ -124,7 +125,17 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
       mentions: [m.sender],
       footer: '*_🌵 usa el botón de abajo para ser Sub-Bot._*',
       buttons: [
-        { buttonId: '.code', buttonText: { displayText: 'ꜱᴇʀ ꜱᴜʙ-ʙᴏᴛ'}, type: 1}
+        { buttonId: '.code', buttonText: { displayText: 'ꜱᴇʀ ꜱᴜʙ-ʙᴏᴛ'}, type: 1},
+    
+        {
+          name: "cta_url",
+          buttonParamsJson: JSON.stringify({
+            display_text: "🌵 Canal",
+            url: channel,
+            merchant_url: channel
+          })
+        }
+  
       ],
       headerType: 4
     }
@@ -158,4 +169,4 @@ function getGreeting() {
   if (hour < 12) return 'una linda mañana ✨'
   if (hour < 18) return 'una linda tarde 🌇'
   return 'una linda noche 🌙'
-                                                    }
+  }
