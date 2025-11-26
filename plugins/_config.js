@@ -73,7 +73,7 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin })
 }
 
 handler.help = ['welcome', 'bienvenida', 'modoadmin', 'antilink', 'nsfw']
-handler.tags = ['config']
+handler.tags = ['group']
 handler.command = ['welcome', 'bienvenida', 'modoadmin', 'antilink', 'nsfw']
 handler.group = true
 
