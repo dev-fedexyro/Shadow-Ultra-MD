@@ -15,7 +15,7 @@ global.APIs = {
   adonix: { url: "https://api-adonix.ultraplus.click", key: 'Dev-fedexyz'}
 }
 
-global.icono = global.icono || 'https://files.catbox.moe/6aa6d8.jpg'
+global.icono = global.icono || 'https://files.catbox.moe/zwc929.jpg'
 
 var handler = m => m
 handler.all = async function (m) {
