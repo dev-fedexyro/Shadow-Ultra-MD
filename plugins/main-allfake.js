@@ -15,6 +15,8 @@ global.APIs = {
   adonix: { url: "https://api-adonix.ultraplus.click", key: 'Dev-fedexyz'}
 }
 
+global.icono = global.icono || 'https://files.catbox.moe/6aa6d8.jpg'
+
 var handler = m => m
 handler.all = async function (m) {
 
@@ -69,7 +71,21 @@ END:VCARD`
     participant: "0@s.whatsapp.net"
 }
 
-  let thumb = await (await fetch(global.icono)).buffer()
+  let thumb = null
+  if (global.icono && typeof global.icono === 'string') {
+    try {
+      const response = await fetch(global.icono)
+      if (response.ok) {
+        thumb = await response.buffer()
+} else {
+        console.warn('No se pudo obtener la imagen desde global.icono:', response.status)
+}
+} catch (err) {
+      console.error('Error al obtener la imagen:', err)
+}
+} else {
+    console.warn('global.icono no está definido o no es una URL válida.')
+}
 
   global.rcanal = {
     contextInfo: {
@@ -93,7 +109,6 @@ END:VCARD`
       mentionedJid: null
 }
 }
-
 }
 
 export default handler
