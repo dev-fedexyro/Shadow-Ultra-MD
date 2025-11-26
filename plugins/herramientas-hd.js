@@ -4,13 +4,21 @@ import FormData from 'form-data'
 const handler = async (m, { conn, usedPrefix}) => {
   const q = m.quoted || m
   const mime = (q.msg || q).mimetype || q.mediaType || ''
-  if (!mime) return conn.reply(m.chat, '🌱 Por favor, responde a una imagen con el comando.', m)
-  if (!/image\/(jpe?g|png)/.test(mime)) return conn.reply(m.chat, `🌵 Formato no compatible (${mime}). Usa una imagen JPG o PNG.`, m)
+
+  if (!mime) {
+    return conn.reply(m.chat, '🌱 Por favor, responde a una imagen con el comando.', m)
+}
+
+  if (!/image\/(jpe?g|png)/.test(mime)) {
+    return conn.reply(m.chat, `🌵 Formato no compatible (${mime}). Usa una imagen JPG o PNG.`, m)
+}
 
   const buffer = await q.download()
-  if (!buffer || buffer.length < 1000) return conn.reply(m.chat, '🍂 Imagen no válida o demasiado pequeña.', m)
+  if (!buffer || buffer.length < 1000) {
+    return conn.reply(m.chat, '🌱 Imagen no válida o demasiado pequeña.', m)
+}
 
-  await m.react('🕒')
+  await m.react('🌱')
 
   try {
     const url = await uploadToUguu(buffer)
@@ -28,13 +36,13 @@ const handler = async (m, { conn, usedPrefix}) => {
       m.chat,
       Buffer.isBuffer(result)? result: result,
       'imagen.jpg',
-      `❀ Imagen mejorada\n» Imagen procesada con éxito.\nServidor: \`${engine}\``,
+      `🌵 Imagen mejorada\n✔️ Procesada con éxito.\n🔧 Servidor: \`${engine}\``,
       m
 )
 
-    await m.react('✅')
+    await m.react('🌵')
 } catch (err) {
-    await m.react('✖️')
+    await m.react('🌱')
 
     const fallback = Array.isArray(err.errors)
 ? err.errors.map(e => `• ${e?.engine || 'Desconocido'}: ${e?.error?.message || e?.message || String(e)}`).join('\n')
@@ -42,15 +50,15 @@ const handler = async (m, { conn, usedPrefix}) => {
 
     await conn.reply(
       m.chat,
-      `⚠︎ No se pudo mejorar la imagen.\n> Usa *${usedPrefix}report* para informarlo.\n\n${fallback}`,
+      `🌱 Error, No se pudo mejorar la imagen.\n\n${fallback}`,
       m
 )
 }
 }
 
+handler.command = ['hd', 'remini', 'enhance']
 handler.help = ['hd', 'remini', 'enhance']
 handler.tags = ['herramientas']
-handler.command = ['hd', 'remini', 'enhance']
 
 export default handler
 
