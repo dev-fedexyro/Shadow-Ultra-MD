@@ -1,5 +1,5 @@
 const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin }) => {
-    const imageUrl = 'https://files.catbox.moe/zwc929.jpg';
+    const imageUrl = 'https://files.catbox.moe/kz8m77.jpg';
     
     const contextInfo = {
         externalAdReply: {
@@ -72,9 +72,9 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin })
     conn.reply(m.chat, `🌵 Has *${isEnable ? 'activado' : 'desactivado'}* el *${propertyName}* para este grupo.`, m, { contextInfo })
 }
 
-handler.help = ['welcome', 'bienvenida', 'modoadmin', 'onlyadmin', 'antilink', 'antienlace', 'nsfw', 'modohorny']
+handler.help = ['welcome', 'bienvenida', 'modoadmin', 'antilink', 'nsfw']
 handler.tags = ['config']
-handler.command = ['welcome', 'bienvenida', 'modoadmin', 'onlyadmin', 'antilink', 'antienlace', 'nsfw', 'modohorny']
+handler.command = ['welcome', 'bienvenida', 'modoadmin', 'antilink', 'nsfw']
 handler.group = true
 
 export default handler
