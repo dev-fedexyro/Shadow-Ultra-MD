@@ -37,8 +37,7 @@ const defaultMenu = {
 `.trim(),
 
   header: `
-╭── ⭒ *%category* 
-`.trim(),
+╭── ⭒ *%category* `.trim(),
 
   body: '│ ➩ %cmd %islimit %isPremium',
   footer: '╰──────────\n',
@@ -56,14 +55,16 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
     let totalreg = Object.keys(global.db.data.users).length
     let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered).length
 
-    let help = Object.values(global.plugins).filter(plugin =>!plugin.disabled).map(plugin => ({
-      help: Array.isArray(plugin.help)? plugin.help: [plugin.help],
-      tags: Array.isArray(plugin.tags)? plugin.tags: [plugin.tags],
-      prefix: 'customPrefix' in plugin,
-      limit: plugin.limit,
-      premium: plugin.premium,
-      enabled:!plugin.disabled
-}))
+    let help = Object.values(global.plugins)
+      .filter(plugin =>!plugin.disabled)
+      .map(plugin => ({
+        help: Array.isArray(plugin.help)? plugin.help: [plugin.help],
+        tags: Array.isArray(plugin.tags)? plugin.tags: [plugin.tags],
+        prefix: 'customPrefix' in plugin,
+        limit: plugin.limit,
+        premium: plugin.premium,
+        enabled:!plugin.disabled
+      }))
 
     for (let plugin of help) {
       if (plugin && plugin.tags) {
@@ -75,7 +76,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
 
     let menuText = [
       defaultMenu.before,
-...Object.keys(tags)
+      ...Object.keys(tags)
         .filter(tag => help.some(menu => menu.tags.includes(tag) && menu.help))
         .map(tag => {
           let section = help.filter(menu => menu.tags.includes(tag) && menu.help)
@@ -113,7 +114,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
       greeting,
       textbot: 'Gracias por usar a Shadow-Bot!',
       readmore: String.fromCharCode(8206).repeat(4001)
-}
+    }
 
     let text = menuText.replace(new RegExp(`%(${Object.keys(replace).join('|')})`, 'g'), (_, key) => replace[key])
 
@@ -126,16 +127,26 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
       buttons: [
         { buttonId: '.code', buttonText: { displayText: 'ꜱᴇʀ ꜱᴜʙ-ʙᴏᴛ'}, type: 1}
       ],
-      headerType: 4
+      headerType: 4,
+      contextInfo: {
+        externalAdReply: {
+          showAdAttribution: true,
+          renderLargerThumbnail: true, 
+          title: 'Shadow menu', 
+          body: 'Shadow Ultra MD', 
+          thumbnailUrl: 'https://files.catbox.moe/12zb63.jpg', 
+          sourceUrl: ''
+        }
+      }
     }
 
     await m.react('🌑')
     await conn.sendMessage(m.chat, buttonMessage, { quoted: m})
 
-} catch (e) {
+  } catch (e) {
     await m.react('✖️')
     throw e
-}
+  }
 }
 
 handler.help = ['menu']
@@ -158,4 +169,4 @@ function getGreeting() {
   if (hour < 12) return 'una linda mañana ✨'
   if (hour < 18) return 'una linda tarde 🌇'
   return 'una linda noche 🌙'
-                             }
+}
