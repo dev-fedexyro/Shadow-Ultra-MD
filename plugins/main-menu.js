@@ -132,11 +132,10 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
         externalAdReply: {
           showAdAttribution: true,
           renderLargerThumbnail: true, 
-          title: 'Shadow menu',
-          body: 'Shadow Ultra MD',
-          thumbnailUrl: 'https://files.catbox.moe/12zb63.jpg',
-          mediaType: 1,
-          sourceUrl: '' 
+          title: 'Shadow menu', 
+          body: 'Shadow Ultra MD', 
+          thumbnailUrl: 'https://files.catbox.moe/12zb63.jpg', 
+          sourceUrl: ''
         }
       }
     }
@@ -170,4 +169,4 @@ function getGreeting() {
   if (hour < 12) return 'una linda mañana ✨'
   if (hour < 18) return 'una linda tarde 🌇'
   return 'una linda noche 🌙'
-  }
+      }
