@@ -1,20 +1,16 @@
 let handler = async (m, { conn, usedPrefix, command }) => {
+
     const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚 (𝐃𝐞𝐯)
-ORG:Dev Team Advanced
-TITLE:CEO & Developer
+FN:𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚
+ORG:𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚
+TITLE:Epictetus, Enchiridion — Chapter 1 (verse 1)
 TEL;type=CELL;waid=5491124918653:+5491124918653
-ADR;type=WORK:;;101 Dev Street;Tech City;California;90210;USA
-X-WA-BIZ-NAME:𝐀𝐝𝐯𝐚𝐧𝐜𝐞 𝐁𝐨𝐭 𝐒𝐞𝐫𝐯𝐢𝐜𝐞𝐬
-X-WA-BIZ-DESCRIPTION:Un bot con funciones avanzadas para automatización y diversión. ¡Siempre mejorando!
-X-WA-BIZ-HOURS:Mo-Fr 09:00-17:00
+ADR;type=WORK:;;2-chōme-7-5 Fuchūchō;Izumi;Osaka;594-0071;Japan
+X-WA-BIZ-NAME:Ｓｈａｄｏｗ - Ｂｏｔ
+X-WA-BIZ-DESCRIPTION:ꜱʜᴀᴅᴏᴡ, ʙᴏᴛ ᴄʀᴇᴀᴅᴏ ꜱᴏʟᴏ ᴘᴏʀ ᴅɪᴠᴇʀꜱióɴ ᴜᴡᴜ ♡
+X-WA-BIZ-HOURS:Mo-Su 00:00-23:59
 END:VCARD`;
-
-    const introText = `👋 ¡Hola! Soy el desarrollador principal de este bot.
-
-Si tienes alguna pregunta, sugerencia o quieres reportar un error, aquí tienes mi contacto directo.`;
-    await conn.reply(m.chat, introText, m);
 
     const q = {
         key: {
@@ -24,7 +20,7 @@ Si tienes alguna pregunta, sugerencia o quieres reportar un error, aquí tienes 
         },
         message: {
             contactMessage: {
-                displayName: "𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚 (𝐃𝐞𝐯)",
+                displayName: "𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚",
                 vcard,
             },
         },
@@ -34,14 +30,14 @@ Si tienes alguna pregunta, sugerencia o quieres reportar un error, aquí tienes 
         m.chat,
         {
             contacts: {
-                displayName: "𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚 (𝐃𝐞𝐯)",
+                displayName: "𝐅𝐞𝐝𝐞 𝐔𝐜𝐡𝐢𝐡𝐚",
                 contacts: [{ vcard }],
             },
             contextInfo: {
                 externalAdReply: {
-                    title: "𝘋𝘦𝘷𝘦𝘭𝘰𝘱𝘦𝘳 𝘥𝘦𝘭 𝘉𝘰𝘵𝘹 𝘧𝘦𝘥𝘦 𝘜𝘤𝘩𝘪𝘩𝘢",
-                    body: "Toca el contacto para chatear.",
-                    thumbnailUrl: "https://files.catbox.moe/2xlrwj.jpg", 
+                    title: "𝘊𝘳𝘦𝘢𝘥𝘰𝘳 𝘥𝘦𝘭 𝘉𝘰𝘵 𝘹 𝘧𝘦𝘥𝘦 𝘜𝘤𝘩𝘪𝘩𝘢",
+                    body: "Contacta con el CEO del bot.",
+                    thumbnailUrl: "https://files.catbox.moe/2xlrwj.jpg",
                     mediaType: 1,
                     renderLargerThumbnail: true,
                 },
@@ -49,7 +45,7 @@ Si tienes alguna pregunta, sugerencia o quieres reportar un error, aquí tienes 
         },
         { quoted: q }
     );
-
+    
     const sections = [{
         title: "⚙️ Opciones de Contacto Rápido",
         rows: [
@@ -70,8 +66,8 @@ Si tienes alguna pregunta, sugerencia o quieres reportar un error, aquí tienes 
     await conn.sendMessage(m.chat, listMessage, { quoted: m });
 };
 
-handler.help = ["developer", "dev2"];
-handler.tags = ["info", "menu"];
-handler.command = ['developer2', 'dev2']
+handler.help = ["owner"];
+handler.tags = ["info"];
+handler.command = ['owner', 'creador']
 
 export default handler;
