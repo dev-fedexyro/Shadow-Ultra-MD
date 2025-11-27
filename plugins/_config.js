@@ -3,7 +3,7 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin })
     
     const contextInfo = {
         externalAdReply: {
-            title: 'Shadow config',
+            title: 'Shadow config.',
             body: 'Shadow Ultra MD',
             sourceUrl: '',
             thumbnailUrl: imageUrl,
