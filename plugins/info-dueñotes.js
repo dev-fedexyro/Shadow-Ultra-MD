@@ -66,8 +66,8 @@ END:VCARD`;
     await conn.sendMessage(m.chat, listMessage, { quoted: m });
 };
 
-handler.help = ["owner"];
+handler.help = ["owner2"];
 handler.tags = ["info"];
-handler.command = ['owner', 'creador']
+handler.command = ['owner2', 'creador2']
 
 export default handler;
