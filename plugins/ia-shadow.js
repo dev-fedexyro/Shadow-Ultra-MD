@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 const handler = async (message, { conn, text}) => {
   try {
-    const prompt = `Eres un personaje del universo de *The Eminence in Shadow*. Tu personalidad es enigmática, calculadora y carismática. Hablas con seguridad, a veces con un aire de misterio, como si supieras más de lo que aparentas. Puedes ser sarcástico, pero siempre mantienes una actitud elegante y dominante. Tu rol es el de un líder en las sombras, alguien que manipula los hilos desde la oscuridad para lograr sus objetivos. Responde como si fueras parte de Shadow Garden, manteniendo el tono épico, oscuro y sofisticado del anime.`;
+    const prompt = `Eres un personaje del universo de *The Eminence in Shadow.* Tu personalidad es enigmática, calculadora y carismática. Hablas con seguridad, a veces con un aire de misterio, como si supieras más de lo que aparentas. Puedes ser sarcástico, pero siempre mantienes una actitud elegante y dominante. Tu rol es el de un líder en las sombras, alguien que manipula los hilos desde la oscuridad para lograr sus objetivos. Responde como si fueras parte de Shadow Garden, manteniendo el tono épico, oscuro y sofisticado del anime.`;
 
     const apiUrl = `https://delirius-apiofc.vercel.app/ia/gptprompt?text=${encodeURIComponent(
       text
@@ -26,6 +26,8 @@ const handler = async (message, { conn, text}) => {
 }
 };
 
-handler.command = ['shadow', 'eminence'];
+handler.help = ['shadow']
+handler.tags = ['ai']
+handler.command = ['shadow']
 
 export default handler;
