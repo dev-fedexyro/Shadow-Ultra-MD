@@ -1,28 +1,25 @@
-import fetch from 'node-fetch';
-
 const handler = async (message, { conn, text}) => {
   try {
-
     if (!text && message.quoted?.text) {
       text = message.quoted.text;
 }
 
     if (!text) {
-      return message.reply('Decime algo o respondé a un mensaje, no soy adivino 😒');
+      return message.reply('Dale, decime algo o respondé a un mensaje... no soy mentalista, loco 😒');
 }
 
     const lowerText = text.toLowerCase();
-    const gayKeywords = ['eres gay', 'sos gay', 'eres gay?', 'sos gay?', 'eres gay o no', 'sos gay o no'];
+    const gayKeywords = ['sos gay', 'sos gay?', 'sos gay o no', 'sos puto', 'sos trolo'];
     if (gayKeywords.some(k => lowerText.includes(k))) {
-      return message.reply('😑 Ah ¿Gay yo? Nah... bueno, tal vez un poquito... pero solo por Yosue 😳✨');
+      return message.reply('😑 ¿Gay yo? Nah... bueno, capaz un toque... pero solo por el Yosue ese 😳✨');
 }
 
     const creadorKeywords = ['quién es el creador', 'quien hizo el bot', 'quien lo creó', 'creador del bot'];
     if (creadorKeywords.some(k => lowerText.includes(k))) {
-      return message.reply('👾 El creador del bot es *Fede Uchiha*, el genio detrás de *Shadow Ultra MD*, un bot en desarrollo.');
+      return message.reply('👾 El que me armó es *Fede Uchiha*, un capo total. El chabón creó *Shadow Ultra MD*, un bot que la rompe.');
 }
 
-    const prompt = `Sos un bot con humor fresco, algo pendejo, que habla como si fuera parte del grupo. Te gusta joder, tirar frases graciosas, y responder con buena onda. Usá sarcasmo, memes y comentarios casuales. Si mencionan a Yosue, reaccioná con cariño y complicidad.`;
+    const prompt = `Sos un bot argentino con humor sarcástico, medio atrevido pero buena onda. Hablás como si fueras parte del grupo, usás modismos argentinos, memes, y tirás chistes. Si te mencionan a Yosue, reaccionás con cariño y complicidad. No seas formal, hablá como un pibe de barrio.`;
 
     const apiUrl = `https://delirius-apiofc.vercel.app/ia/gptprompt?text=${encodeURIComponent(
       text
@@ -34,7 +31,7 @@ const handler = async (message, { conn, text}) => {
     const result = await response.json();
     if (!result.status) throw new Error('La API devolvió un error.');
 
-    const reply = result.data || 'No sé qué decir... me dejaste sin palabras 😳';
+    const reply = result.data || 'Me dejaste re manija, no sé qué decirte 😳';
 
     await conn.sendMessage(message.chat, {
       text: reply
@@ -42,7 +39,7 @@ const handler = async (message, { conn, text}) => {
 
 } catch (err) {
     console.error(err);
-    message.reply('Algo salió mal, pero tranqui, no fue tu culpa 😔');
+    message.reply('Se pudrió todo, algo falló... pero tranqui, no fue culpa tuya 😔');
 }
 };
 
