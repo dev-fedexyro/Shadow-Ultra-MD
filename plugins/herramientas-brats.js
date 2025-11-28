@@ -1,5 +1,5 @@
-import { sticker } from '../lib/sticker.js'
-import axios from 'axios' 
+import axios from 'axios';
+import { sticker} from '../lib/sticker.js';
 
 let handler = async (m, { conn, text, command}) => {
   if (!text) {
@@ -13,16 +13,11 @@ let handler = async (m, { conn, text, command}) => {
   try {
     await m.react('⏳');
 
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      let errorText = `La API respondió con estado ${response.status}`;
-      try {
-        errorText += `: ${await response.text()}`;
-} catch {}
-      throw new Error(errorText);
-}
+    const response = await axios.get(apiUrl, {
+      responseType: 'arraybuffer',
+});
 
-    const buffer = await response.buffer();
+    const buffer = Buffer.from(response.data);
 
     await conn.sendFile(
       m.chat,
