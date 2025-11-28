@@ -7,10 +7,10 @@ let handler = async (m, { conn, usedPrefix, text }) => {
   if (m.fromMe) return
 
   if (text && (text.toLowerCase() === 'code' || text.toLowerCase() === 'codigo')) {
-    await m.react('⏳') 
+    await m.react('💾') 
     
     try {
-      const fileContent = fs.readFileSync(`./plugins/tools/herramientas-get.js`) 
+      const fileContent = fs.readFileSync(`./plugins/tools/herramientas-get.js`)
       const zip = new AdmZip()
       zip.addFile('herramientas-get.js', fileContent, 'Código fuente del script herramientas-get.js')
       const zipBuffer = zip.toBuffer()
@@ -24,7 +24,7 @@ let handler = async (m, { conn, usedPrefix, text }) => {
       )
     } catch (e) {
       await m.react('✖️')
-      return conn.reply(m.chat, `⚠️ No se pudo procesar el código fuente.\n\n${e.message}`, m)
+      return conn.reply(m.chat, `⚠️ No se pudo obtener el código fuente. Error: ${e.message}`, m)
     }
   }
 
@@ -32,7 +32,7 @@ let handler = async (m, { conn, usedPrefix, text }) => {
     return m.reply(`🔗 *Error*: Por favor, proporciona una *URL* válida para descargar su contenido.`)
 
   let url = text
-  await m.react('🌵') 
+  await m.react('🌐') 
 
   try {
     let res = await fetch(url)
