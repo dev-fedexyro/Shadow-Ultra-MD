@@ -15,7 +15,17 @@ let handler = async (m, { conn, command }) => {
             throw new Error(errorText);
         }
 
-        await conn.sendFile(m.chat, response, 'anime.jpg', '🌵 imagen random:', m);
+        const imageBuffer = await response.buffer();
+
+        await conn.sendFile(
+            m.chat, 
+            imageBuffer, 
+            'anime.jpg', 
+            '🌵 imagen random:', 
+            m,
+            false,
+            { mimetype: 'image/jpeg' }
+        );
         
     } catch (error) {
         console.error('Error al obtener la imagen:', error);
