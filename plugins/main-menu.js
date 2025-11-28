@@ -55,10 +55,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
     let totalreg = Object.keys(global.db.data.users).length
     let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered).length
     
-    // --- Comienzo: Definición de thumbResized para evitar errores ---
-    // (Asegúrate de definir esto correctamente si usas miniaturas)
     const thumbResized = null 
-    // --- Fin: Definición de thumbResized ---
 
     let help = Object.values(global.plugins).filter(plugin =>!plugin.disabled).map(plugin => ({
       help: Array.isArray(plugin.help)? plugin.help: [plugin.help],
@@ -146,7 +143,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
         },
         hasMediaAttachment: true
       },
-      body: { text: '' },
+      body: { text: '' }, 
       footer: { text: menu },
       nativeFlowMessage: {
         buttons: [
@@ -171,10 +168,9 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
         ]
       }
     }
-    
+
     await m.react('🌑')
-    await conn.sendMessage(m.chat, nativeFlowPayload, { quoted: m})
-    
+    await conn.sendMessage(m.chat, nativeFlowPayload, { quoted: m}) 
 
 
 } catch (e) {
