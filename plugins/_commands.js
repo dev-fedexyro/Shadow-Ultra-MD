@@ -74,7 +74,7 @@ function suggestClosestCommands(command, allCommands, threshold = 40, limit = 3)
 async function sendNotFoundMessage(m, usedPrefix, command, topMatches) {
     const mundo = getCountryFlag(m.sender);
     
-    let replyMessage = `❌ Comando *\`${command}\`* no encontrado en la base de datos. 😅\n`;
+    let replyMessage = `🌵 Comando *\`${command}\`* no encontrado en la base de datos. 😅\n`;
     replyMessage += `> ${mundo} Utiliza *\`${usedPrefix}menu\`* para ver la lista completa.\n\n`;
 
     if (topMatches.length > 0) {
@@ -89,21 +89,6 @@ async function sendNotFoundMessage(m, usedPrefix, command, topMatches) {
 
 
 export async function before(m) {
-     let fkontak = { 
-        "key": { 
-            "participants":"0@s.whatsapp.net", 
-            "remoteJid": "status@broadcast", 
-            "fromMe": false, 
-            "id": "Halo" 
-        }, 
-        "message": { 
-            "contactMessage": { 
-                "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` 
-            }
-        }, 
-        "participant": "0@s.whatsapp.net" 
-    }
-
     if (!m.text || !global.prefix.test(m.text)) return;
 
     const usedPrefix = global.prefix.exec(m.text)[0];
@@ -119,7 +104,6 @@ export async function before(m) {
         
         if (chat.isBanned) {
             const mundo = getCountryFlag(m.sender);
-
             await m.reply(`🚫 El bot está desactivado en este chat. Un administrador puede usar \`${usedPrefix}unbanchat\` para reactivarlo.`);
             return true;
         }
@@ -135,4 +119,4 @@ export async function before(m) {
         
         return true; 
     }
-    }
+                           }
