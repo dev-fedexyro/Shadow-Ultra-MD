@@ -33,8 +33,8 @@ let handler = async (m, { conn, command }) => {
     }
 }
 
-handler.help = ['anime'];
-handler.tags = ['herramientas', 'imagen'];
-handler.command = ['anime'];
+handler.help = ['anime', 'random'];
+handler.tags = ['herramientas'];
+handler.command = ['anime', 'random'];
 
 export default handler;
