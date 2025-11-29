@@ -10,7 +10,7 @@ const format = sizeFormatter({
     render: (literal, symbol) => `${literal} ${symbol}B`
 })
 
-const FIXED_IMAGE_URL = 'https://files.catbox.moe/cdxpz2.jpg'
+const FIXED_IMAGE_URL = 'https://files.catbox.moe/nmpcr8.jpg'
 
 const getImageUrlBuffer = async () => {
     try {
@@ -41,12 +41,12 @@ var handler = async (m, { conn }) => {
             text: texto,
             contextInfo: {
                 externalAdReply: {
-                    title: "Shadow • Ping",
+                    title: "𝘚𝘩𝘢𝘥𝘰𝘸 • 𝘗𝘪𝘯𝘨",
                     body: "Información del tiempo",
                     thumbnail: thumbnailBuffer,
                     mediaType: 1,
                     renderLargerThumbnail: false,
-                    sourceUrl: "https://wa.me/" + m.sender.split('@')[0]
+                    //sourceUrl: "https://wa.me/" + m.sender.split('@')[0]
                 }
             }
         }
