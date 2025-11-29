@@ -1,161 +1,180 @@
-import { promises as fs} from 'fs'
-import { join} from 'path'
-import { xpRange} from '../lib/levelling.js'
+import moment from "moment-timezone";
+import fetch from "node-fetch";
+const { prepareWAMessageMedia, generateWAMessageFromContent } = (await import("@whiskeysockets/baileys")).default;
 
-let tags = {
-  info: 'ɪɴғᴏʀᴍᴀᴄɪᴏ́ɴ',
-  anime: 'ᴀɴɪᴍᴇ & ᴡᴀɪғᴜs',
-  buscador: 'ʙᴜsᴄᴀᴅᴏʀᴇs',
-  downloader: 'ᴅᴇsᴄᴀʀɢᴀs',
-  economy: 'ᴇᴄᴏɴᴏᴍɪ́ᴀ & ᴊᴜᴇɢᴏs',
-  fun: 'ᴊᴜᴇɢᴏs ᴅɪᴠᴇʀᴛɪᴅᴏs',
-  group: 'ғᴜɴᴄɪᴏɴᴇs ᴅᴇ ɢʀᴜᴘᴏ',
-  ai: 'ɪɴᴛᴇʟɪɢᴇɴᴄɪᴀ ᴀʀᴛғɪᴄɪᴀʟ',
-  game: 'ᴊᴜᴇɢᴏs ᴄʟᴀ́sɪᴄᴏs',
-  serbot: 'sᴜʙ-ʙᴏᴛs',
-  main: 'ᴄᴏᴍᴀɴᴅᴏs ᴘʀɪɴᴄɪᴘᴀʟᴇs',
-  nable: 'ᴀᴄᴛɪᴠᴀʀ / ᴅᴇsᴀᴄᴛɪᴠᴀʀ',
-  nsfw: 'ɴsғᴡ',
-  owner: 'ᴅᴜᴇñᴏ / ᴀᴅᴍɪɴ',
-  sticker: 'sᴛɪᴄᴋᴇʀs & ʟᴏɢᴏs',
-  herramientas: 'ʜᴇʀʀᴀᴍɪᴇɴᴛᴀs'
-}
+let handler = async (m, { conn, usedPrefix, isOwner }) => {
+  try {
+    let tags = {
+      info: 'ɪɴғᴏʀᴍᴀᴄɪᴏ́ɴ',
+      anime: 'ᴀɴɪᴍᴇ & ᴡᴀɪғᴜs',
+      buscador: 'ʙᴜsᴄᴀᴅᴏʀᴇs',
+      downloader: 'ᴅᴇsᴄᴀʀɢᴀs',
+      economy: 'ᴇᴄᴏɴᴏᴍɪ́ᴀ & ᴊᴜᴇɢᴏs',
+      fun: 'ᴊᴜᴇɢᴏs ᴅɪᴠᴇʀᴛɪᴅᴏs',
+      group: 'ғᴜɴᴄɪᴏɴᴇs ᴅᴇ ɢʀᴜᴘᴏ',
+      ai: 'ɪɴᴛᴇʟɪɢᴇɴᴄɪᴀ ᴀʀᴛғɪᴄɪᴀʟ',
+      game: 'ᴊᴜᴇɢᴏs ᴄʟᴀ́sɪᴄᴏs',
+      serbot: 'sᴜʙ-ʙᴏᴛs',
+      main: 'ᴄᴏᴍᴀɴᴅᴏs ᴘʀɪɴᴄɪᴘᴀʟᴇs',
+      nable: 'ᴀᴄᴛɪᴠᴀʀ / ᴅᴇsᴀᴄᴛɪᴠᴀʀ',
+      nsfw: 'ɴsғᴡ',
+      owner: 'ᴅᴜᴇñᴏ / ᴀᴅᴍɪɴ',
+      sticker: 'sᴛɪᴄᴋᴇʀs & ʟᴏɢᴏs',
+      herramientas: 'ʜᴇʀʀᴀᴍɪᴇɴᴛᴀs'
+    }
 
-const defaultMenu = {
-  before: `
+    const defaultMenu = {
+      before: `
 ───────── ⭒ ─────────
 
 Hola %name, soy *Shadow-Bot*.
 %greeting, estoy aquí para ayudarte.
 
-🌵 Modo: *Privado*
 📚 Motor: *Baileys MD*
+👤 Bot: *%botName*
+
 ⏱ Tiempo activo: *%uptime*
 👥 Usuarios registrados: *%totalreg*%readmore
 
 *▪︎──LISTA DE COMANDOS──▪︎*
 `.trim(),
-  
-  header: `
-╭── ⭒ *%category* 
-`.trim(),
+      
+      header: `
+╭── ⭒ *%category* `.trim(),
+    
+      body: '│ ➩ %cmd %islimit %isPremium',
+      footer: '╰──────────\n',
+      after: `
+🌐 *Canal Oficial:*
+https://whatsapp.com/channel/0029Vb6uR0A5vKA8xypAZM04
+\n🌐✨ *Creado por wilker* ✨🌐
+`.trim()
+    }
 
-  body: '│ ➩ %cmd %islimit %isPremium',
-  footer: '╰──────────\n',
-  after: ''
-}
+    let uptimeSec = process.uptime();
+    let hours = Math.floor(uptimeSec / 3600);
+    let minutes = Math.floor((uptimeSec % 3600) / 60);
+    let seconds = Math.floor(uptimeSec % 60);
+    let uptimeStr = `${hours}h ${minutes}m ${seconds}s`;
 
-let handler = async (m, { conn, usedPrefix: _p, __dirname}) => {
-  try {
-    let _package = JSON.parse(await fs.readFile(join(__dirname, '../package.json')).catch(() => '{}')) || {}
-    let { exp, limit, level} = global.db.data.users[m.sender]
-    let { min, xp, max} = xpRange(level, global.multiplier)
-    let name = await conn.getName(m.sender)
-    let _uptime = process.uptime() * 1000
-    let uptime = clockString(_uptime)
-    let totalreg = Object.keys(global.db.data.users).length
-    let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered).length
+    const tz = "America/Tegucigalpa";
+    const now = moment.tz(tz);
+    const hour = now.hour();
 
-    let help = Object.values(global.plugins).filter(plugin =>!plugin.disabled).map(plugin => ({
-      help: Array.isArray(plugin.help)? plugin.help: [plugin.help],
-      tags: Array.isArray(plugin.tags)? plugin.tags: [plugin.tags],
-      prefix: 'customPrefix' in plugin,
-      limit: plugin.limit,
-      premium: plugin.premium,
-      enabled:!plugin.disabled
-}))
+    let saludo = "👋 ¡Hola!";
+    if (hour >= 5 && hour < 12) saludo = "☀️ ¡Buenos días!";
+    else if (hour >= 12 && hour < 18) saludo = "🌅 ¡Buenas tardes!";
+    else saludo = "🌙 ¡Buenas noches!";
 
-    for (let plugin of help) {
-      if (plugin && plugin.tags) {
-        for (let tag of plugin.tags) {
-          if (!(tag in tags)) tags[tag] = tag
+    let name = conn.getName(m.sender);
+    let totalreg = Object.keys(global.db.data.users).length;
+    let readmore = '\n\n'; 
+    let botName = global.botname || "Chrome Bot"; 
+    
+    let bannerUrl = global.michipg || "https://files.catbox.moe/t7gkiu.jpg";
+    let videoUrl = "https://raw.githubusercontent.com/UploadsAdonix/archivos/main/1763142155838-e70c63.mp4";
+
+    let mediaMessage = null;
+    let thumbnailBuffer = null;
+    try {
+      const res = await fetch(bannerUrl);
+      thumbnailBuffer = await res.buffer();
+      mediaMessage = await prepareWAMessageMedia({ video: { url: videoUrl }, gifPlayback: true }, { upload: conn.waUploadToServer });
+    } catch (e) {
+      // Manejo de errores de media sin logear en consola
+    }
+    
+    let menu = {};
+    for (let plugin of Object.values(global.plugins)) {
+      if (!plugin || !plugin.help) continue;
+      let taglist = plugin.tags || [];
+      for (let tag of taglist) {
+        if (!menu[tag]) menu[tag] = [];
+        if (tags[tag]) menu[tag].push(plugin);
+      }
+    }
+
+    let text = defaultMenu.before
+        .replace(/%uptime/g, uptimeStr)
+        .replace(/%greeting/g, saludo)
+        .replace(/%name/g, name)
+        .replace(/%totalreg/g, totalreg)
+        .replace(/%readmore/g, readmore)
+        .replace(/%botName/g, botName);
+
+
+    for (let tag in tags) {
+      if (menu[tag] && menu[tag].length > 0) {
+        text += defaultMenu.header.replace(/%category/g, tags[tag]);
+        
+        for (let plugin of menu[tag]) {
+          if (plugin.help && plugin.tags && plugin.tags.includes(tag)) {
+            for (let cmd of plugin.help) {
+                let islimit = plugin.limit ? 'Ⓛ' : '';
+                let isPremium = plugin.premium || plugin.isPrivate ? 'Ⓟ' : '';
+                
+                text += defaultMenu.body
+                    .replace(/%cmd/g, usedPrefix + cmd)
+                    .replace(/%islimit/g, islimit)
+                    .replace(/%isPremium/g, isPremium) + '\n';
+            }
+          }
+        }
+        text += defaultMenu.footer;
+      }
+    }
+
+    text += defaultMenu.after;
+    
+    await conn.sendMessage(m.chat, { react: { text: '🤖', key: m.key } });
+
+    const msg = generateWAMessageFromContent(m.chat, {
+      viewOnceMessage: {
+        message: {
+          interactiveMessage: {
+            body: { text: text }, 
+            footer: { text: "🤖 Shadow-Bot | Menú Principal" },
+            header: {
+              hasMediaAttachment: !!mediaMessage,
+              videoMessage: mediaMessage ? mediaMessage.videoMessage : null
+            },
+            nativeFlowMessage: {
+              buttons: [
+                {
+                  name: "cta_url",
+                  buttonParamsJson: JSON.stringify({
+                    display_text: "🌐 Canal de Shadow",
+                    url: "https://whatsapp.com/channel/0029Vb6uR0A5vKA8xypAZM04",
+                    merchant_url: "https://whatsapp.com/channel/0029Vb6uR0A5vKA8xypAZM04"
+                  })
+                }
+              ],
+              messageParamsJson: ""
+            },
+            contextInfo: {
+              mentionedJid: [m.sender],
+              isForwarded: true,
+              forwardingScore: 9999999,
+              externalAdReply: {
+                title: "🤖 Shadow Bot - Menú Principal 📊",
+                body: "Accede al canal oficial",
+                thumbnail: thumbnailBuffer,
+                sourceUrl: "https://whatsapp.com/channel/0029Vb6uR0A5vKA8xypAZM04",
+                mediaType: 2, 
+                renderLargerThumbnail: true
+              }
+            }
+          }
         }
       }
-    }
+    }, { quoted: m });
 
-    let menuText = [
-      defaultMenu.before,
-...Object.keys(tags)
-        .filter(tag => help.some(menu => menu.tags.includes(tag) && menu.help))
-        .map(tag => {
-          let section = help.filter(menu => menu.tags.includes(tag) && menu.help)
-            .map(menu => menu.help.map(cmd =>
-              defaultMenu.body
-                .replace(/%cmd/g, menu.prefix? cmd: _p + cmd)
-                .replace(/%islimit/g, menu.limit? '◜⭐◞': '')
-                .replace(/%isPremium/g, menu.premium? '◜🪪◞': '')
-            ).join('\n')).join('\n')
+    await conn.relayMessage(m.chat, msg.message, {});
 
-          if (section.trim()) {
-            return defaultMenu.header.replace(/%category/g, tags[tag]) + '\n' + section + '\n' + defaultMenu.footer
-          }
-          return ''
-        }),
-      defaultMenu.after
-    ].join('\n')
+  } catch (e) {
+    conn.reply(m.chat, "👻 Error al cargar el menú.", m);
+  }
+};
 
-    let greeting = getGreeting()
-    let replace = {
-      '%': '%',
-      p: _p,
-      uptime,
-      _uptime,
-      taguser: '@' + m.sender.split("@")[0],
-      name,
-      level,
-      limit,
-      exp: exp - min,
-      maxexp: xp,
-      totalexp: exp,
-      xp4levelup: max - exp,
-      totalreg,
-      rtotalreg,
-      greeting,
-      textbot: 'Gracias por usar a Shadow-Bot!',
-      readmore: String.fromCharCode(8206).repeat(4001)
-}
-
-    let text = menuText.replace(new RegExp(`%(${Object.keys(replace).join('|')})`, 'g'), (_, key) => replace[key])
-
-    let buttonMessage = {
-      video: { url: 'https://cdn.russellxz.click/14cf14e9.mp4'},
-      gifPlayback: true,
-      caption: text.trim(),
-      mentions: [m.sender],
-      footer: '*_🌵 usa el botón de abajo para ser Sub-Bot._*',
-      buttons: [
-        { buttonId: '.code', buttonText: { displayText: 'ꜱᴇʀ ꜱᴜʙ-ʙᴏᴛ'}, type: 1}
-      ],
-      headerType: 4
-    }
-
-    await m.react('🌑')
-    await conn.sendMessage(m.chat, buttonMessage, { quoted: m})
-
-} catch (e) {
-    await m.react('✖️')
-    throw e
-}
-}
-
-handler.help = ['menu']
-handler.tags = ['main']
-handler.command = ['menu', 'help', 'menú']
-handler.register = true
-export default handler
-
-function clockString(ms) {
-  let h = Math.floor(ms / 3600000)
-  let m = Math.floor(ms / 60000) % 60
-  let s = Math.floor(ms / 1000) % 60
-  return [h, m, s].map(v => v.toString().padStart(2, '0')).join(':')
-}
-
-function getGreeting() {
-  let hour = new Date().getHours()
-  if (hour < 3) return 'una linda noche 💤'
-  if (hour < 6) return 'una linda mañana 🌅'
-  if (hour < 12) return 'una linda mañana ✨'
-  if (hour < 18) return 'una linda tarde 🌇'
-  return 'una linda noche 🌙'
-      }
+handler.command = ['help', 'menu'];
+export default handler;
