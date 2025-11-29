@@ -146,7 +146,7 @@ Hola %name, soy *Shadow-Bot*.
                 {
                   name: "cta_url",
                   buttonParamsJson: JSON.stringify({
-                    display_text: "🌱 Canal Oficial",
+                    display_text: "🌱 ᴄᴀɴᴀʟ ᴏꜰɪᴄɪᴀʟ",
                     url: "https://whatsapp.com/channel/0029VbBG4i2GE56rSgXsqw2W",
                     merchant_url: "https://whatsapp.com/channel/0029VbBG4i2GE56rSgXsqw2W"
                   })
