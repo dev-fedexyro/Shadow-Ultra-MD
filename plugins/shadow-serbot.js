@@ -32,7 +32,7 @@ if (socklimit >= 50) {
 return m.reply(`[!] No se han encontrado espacios para *Sub-Bots* disponibles.`)
 }
 let mentionedJid = await m.mentionedJid
-let who = mentionedJd && mentionedJid[0] ? mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
+let who = mentionedJid && mentionedJid[0] ? mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
 let id = `${who.split`@`[0]}`
 let pathShadowJadiBot = path.join(`./${jadi}/`, id)
 if (!fs.existsSync(pathShadowJadiBot)){
@@ -107,6 +107,22 @@ console.log(`[AUTO-LIMPIEZA] Sesión ${path.basename(pathShadowJadiBot)} elimina
 async function connectionUpdate(update) {
 const { connection, lastDisconnect, isNewLogin, qr } = update
 if (isNewLogin) sock.isInit = false
+
+if (mcode && !sock.user && !isInit) { 
+    let secret = await sock.requestPairingCode((m.sender.split`@`[0]))
+    secret = secret.match(/.{1,4}/g)?.join("-")
+    txtCode = await conn.sendMessage(m.chat, {text : rtx2}, { quoted: m })
+    codeBot = await m.reply(secret)
+    console.log(secret)
+}
+
+if (txtCode && txtCode.key) {
+    setTimeout(() => { conn.sendMessage(m.sender, { delete: txtCode.key })}, 30000)
+}
+if (codeBot && codeBot.key) {
+    setTimeout(() => { conn.sendMessage(m.sender, { delete: codeBot.key })}, 30000)
+}
+
 if (qr && !mcode) {
 if (m?.chat) {
 txtQR = await conn.sendMessage(m.chat, { image: await qrcode.toBuffer(qr, { scale: 8 }), caption: rtx.trim()}, { quoted: m})
@@ -118,19 +134,7 @@ setTimeout(() => { conn.sendMessage(m.sender, { delete: txtQR.key })}, 30000)
 }
 return
 } 
-if (qr && mcode) {
-let secret = await sock.requestPairingCode((m.sender.split`@`[0]))
-secret = secret.match(/.{1,4}/g)?.join("-")
-txtCode = await conn.sendMessage(m.chat, {text : rtx2}, { quoted: m })
-codeBot = await m.reply(secret)
-console.log(secret)
-}
-if (txtCode && txtCode.key) {
-setTimeout(() => { conn.sendMessage(m.sender, { delete: txtCode.key })}, 30000)
-}
-if (codeBot && codeBot.key) {
-setTimeout(() => { conn.sendMessage(m.sender, { delete: codeBot.key })}, 30000)
-}
+
 const endSesion = async (loaded) => {
 if (!loaded) {
 try {
