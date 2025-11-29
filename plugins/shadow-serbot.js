@@ -27,6 +27,8 @@ else global.conns = []
 function isSubBotConnected(jid) { return global.conns.some(sock => sock?.user?.jid && sock.user.jid.split("@")[0] === jid.split("@")[0]) }
 let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
 if (!globalThis.db.data.settings[conn.user.jid].jadibotmd) return m.reply(`ꕥ El Comando *${command}* está desactivado temporalmente.`)
+let time = global.db.data.users[m.sender].Subs + 120000
+if (new Date - global.db.data.users[m.sender].Subs < 120000) return conn.reply(m.chat, `ꕥ Debes esperar ${msToTime(time - new Date())} para volver a vincular un *Sub-Bot.*`, m)
 let socklimit = global.conns.filter(sock => sock?.user).length
 if (socklimit >= 50) {
 return m.reply(`ꕥ No se han encontrado espacios para *Sub-Bots* disponibles.`)
@@ -192,7 +194,7 @@ userJid = sock.authState.creds.me.jid || `${path.basename(pathShadowJadiBot)}@s.
 console.log(chalk.bold.cyanBright(`\n❒⸺⸺⸺⸺【• SUB-BOT •】⸺⸺⸺⸺❒\n│\n│ ❍ ${userName} (+${path.basename(pathShadowJadiBot)}) conectado exitosamente.\n│\n❒⸺⸺⸺【• CONECTADO •】⸺⸺⸺❒`))
 sock.isInit = true
 global.conns.push(sock)
-m?.chat ? await conn.sendMessage(m.chat, { text: isSubBotConnected(m.sender) ? `@${m.sender.split('@')[0]}, ya estás conectado, leyendo mensajes entrantes...` : `🌿 Genial has registrado un nuevo *Sub-Bot!* [@${m.sender.split('@')[0]}]\n\n> Puedes ver los Sub-Bots usa el comando *#bot*`, mentions: [m.sender] }, { quoted: m }) : ''
+m?.chat ? await conn.sendMessage(m.chat, { text: isSubBotConnected(m.sender) ? `@${m.sender.split('@')[0]}, ya estás conectado, leyendo mensajes entrantes...` : `❀ Has registrado un nuevo *Sub-Bot!* [@${m.sender.split('@')[0]}]\n\n> Puedes ver la información del bot usando el comando *#infobot*`, mentions: [m.sender] }, { quoted: m }) : ''
 }}
 setInterval(async () => {
 if (!sock.user) {
