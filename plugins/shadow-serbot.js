@@ -17,9 +17,8 @@ let crm3 = "SBpbmZvLWRvbmFyLmpz"
 let crm4 = "IF9hdXRvcmVzcG9uZGVyLmpzIGluZm8tYm90Lmpz"
 let drm1 = ""
 let drm2 = ""
-let rtx = "🔮 *ꜱʜᴀᴅᴏᴡ | ᴠɪɴᴄᴜʟᴀᴄɪóɴ Qʀ*\n\n*ᴘʀᴏᴄᴇꜱᴏ ᴘᴀʀᴀ ꜱᴇʀ ꜱᴜʙ-ʙᴏᴛ ᴛᴇᴍᴘᴏʀᴀʟ:*\n\n\`1\` » ᴀʙʀᴇ WʜᴀᴛꜱAᴘᴘ ʏ ᴠᴇ ᴀ *Dɪꜱᴘᴏꜱɪᴛɪᴠᴏꜱ Vɪɴᴄᴜʟᴀᴅᴏꜱ*.\n\n\`2\` » Eꜱᴄᴀɴᴇᴀ ᴇʟ ᴄóᴅɪɢᴏ Qʀ Qᴜᴇ ᴀᴘᴀʀᴇᴄᴇʀá ɪɴᴍᴇᴅɪᴀᴛᴀᴍᴇɴᴛᴇ.\n\n⚠️ *ɴᴏᴛᴀ:* Eʟ Qʀ ᴇxᴘɪʀᴀ ʀáᴘɪᴅᴀᴍᴇɴᴛᴇ (45 ꜱᴇɢᴜɴᴅᴏꜱ). Aꜱᴇɢúʀᴀᴛᴇ ᴅᴇ ᴛᴇɴᴇʀ ᴛᴜ ʟᴇᴄᴛᴏʀ ᴅᴇ Qʀ ʟɪꜱᴛᴏ. ꜱɪ ᴇʟ ᴄóᴅɪɢᴏ ɴᴏ ᴄᴀʀɢᴀ, ᴜꜱᴀ `#code`."
+// Las variables rtx y rtx2 han sido eliminadas.
 
-let rtx2 = "🗝️ *ꜱʜᴀᴅᴏᴡ | ᴄóᴅɪɢᴏ ᴅᴇ ᴇɴʟᴀᴄᴇ*\n\n*ɪɴɢʀᴇꜱᴀ ᴇꜱᴛᴇ ᴄóᴅɪɢᴏ (8 ᴅíɢɪᴛᴏꜱ):*\n\n\`1\` » Vᴇ ᴀ *Dɪꜱᴘᴏꜱɪᴛɪᴠᴏꜱ Vɪɴᴄᴜʟᴀᴅᴏꜱ* ᴇɴ WʜᴀᴛꜱAᴘᴘ.\n\n\`2\` » Sᴇʟᴇᴄᴄɪᴏɴᴀ *Vɪɴᴄᴜʟᴀʀ ᴄᴏɴ ᴇʟ ɴúᴍᴇʀᴏ ᴅᴇ ᴛᴇʟéꜰᴏɴᴏ*.\n\n\`3\` » Iɴᴛʀᴏᴅᴜᴄᴇ ᴇʟ ᴄóᴅɪɢᴏ Qᴜᴇ ꜱᴇ ᴇɴᴠɪᴀʀá ᴇɴ ᴇʟ ꜱɪɢᴜɪᴇɴᴛᴇ ᴍᴇɴꜱᴀᴊᴇ.\n\n🚫 *ꜱᴇɢᴜʀɪᴅᴀᴅ:* Eꜱᴛᴀ ꜱᴇꜱɪóɴ ᴛᴇᴍᴘᴏʀᴀʟ ɴᴏ ᴅᴇʙᴇ ꜱᴇʀ ᴠɪɴᴄᴜʟᴀᴅᴀ ᴀ ᴛᴜ ᴄᴜᴇɴᴛᴀ ᴘʀɪɴᴄɪᴘᴀʟ."
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const shadowJBOptions = {}
@@ -108,23 +107,48 @@ console.log(`[AUTO-LIMPIEZA] Sesión ${path.basename(pathShadowJadiBot)} elimina
 async function connectionUpdate(update) {
 const { connection, lastDisconnect, isNewLogin, qr } = update
 if (isNewLogin) sock.isInit = false
+
 if (qr && !mcode) {
-if (m?.chat) {
-txtQR = await conn.sendMessage(m.chat, { image: await qrcode.toBuffer(qr, { scale: 8 }), caption: rtx.trim()}, { quoted: m})
-} else {
-return 
-}
-if (txtQR && txtQR.key) {
-setTimeout(() => { conn.sendMessage(m.sender, { delete: txtQR.key })}, 30000)
-}
-return
+    const rtxCaption = `🔮 *ꜱʜᴀᴅᴏᴡ | ᴠɪɴᴄᴜʟᴀᴄɪóɴ Qʀ*\n\n*ᴘʀᴏᴄᴇꜱᴏ ᴘᴀʀᴀ ꜱᴇʀ ꜱᴜʙ-ʙᴏᴛ ᴛᴇᴍᴘᴏʀᴀʟ:*\n\n\`1\` » ᴀʙʀᴇ WʜᴀᴛꜱAᴘᴘ ʏ ᴠᴇ ᴀ *Dɪꜱᴘᴏꜱɪᴛɪᴠᴏꜱ Vɪɴᴄᴜʟᴀᴅᴏꜱ*.\n\n\`2\` » Eꜱᴄᴀɴᴇᴀ ᴇʟ ᴄóᴅɪɢᴏ Qʀ Qᴜᴇ ᴀᴘᴀʀᴇᴄᴇʀá ɪɴᴍᴇᴅɪᴀᴛᴀᴍᴇɴᴛᴇ.\n\n⚠️ *ɴᴏᴛᴀ:* Eʟ Qʀ ᴇxᴘɪʀᴀ ʀáᴘɪᴅᴀᴍᴇɴᴛᴇ (45 ꜱᴇɢᴜɴᴅᴏꜱ). Aꜱᴇɢúʀᴀᴛᴇ ᴅᴇ ᴛᴇɴᴇʀ ᴛᴜ ʟᴇᴄᴛᴏʀ ᴅᴇ Qʀ ʟɪꜱᴛᴏ. ꜱɪ ᴇʟ ᴄóᴅɪɢᴏ ɴᴏ ᴄᴀʀɢᴀ, ᴜꜱᴀ `#code``;
+
+    if (m?.chat) {
+        txtQR = await conn.sendMessage(m.chat, { 
+            image: await qrcode.toBuffer(qr, { scale: 8 }), 
+            caption: rtxCaption
+        }, { quoted: m});
+    } else {
+        return 
+    }
+    if (txtQR && txtQR.key) {
+        setTimeout(() => { conn.sendMessage(m.sender, { delete: txtQR.key })}, 30000)
+    }
+    return
 } 
 if (qr && mcode) {
-let secret = await sock.requestPairingCode((m.sender.split`@`[0]))
-secret = secret.match(/.{1,4}/g)?.join("-")
-txtCode = await conn.sendMessage(m.chat, {text : rtx2}, { quoted: m })
-codeBot = await m.reply(secret)
-console.log(secret)
+    let rawCode = await sock.requestPairingCode((m.sender.split`@`[0]))
+    
+    const customCaption = `*ꜱʜᴀᴅᴏᴡ | ᴄóᴅɪɢᴏ*\n\n**ɪɴɢʀᴇꜱᴀ ᴇꜱᴛᴇ ᴄóᴅɪɢᴏ (8 ᴅíɢɪᴛᴏꜱ):**\n\n\`1\` » Vᴇ ᴀ *Dɪꜱᴘᴏꜱɪᴛɪᴠᴏꜱ Vɪɴᴄᴜʟᴀᴅᴏꜱ* ᴇɴ WʜᴀᴛꜱAᴘᴘ.\n\n\`2\` » Sᴇʟᴇᴄᴄɪᴏɴᴀ *Vɪɴᴄᴜʟᴀʀ ᴄᴏɴ ᴇʟ ɴúᴍᴇʀᴏ ᴅᴇ ᴛᴇʟéꜰᴏɴᴏ*.\n\n\`3\` » Iɴᴛʀᴏᴅᴜᴄᴇ ᴇʟ ᴄóᴅɪɢᴏ Qᴜᴇ ꜱᴇ ᴇɴᴠɪᴀʀá ᴇɴ ᴇʟ ꜱɪɢᴜɪᴇɴᴛᴇ ᴍᴇɴꜱᴀᴊᴇ.\n\n🚫 **ꜱᴇɢᴜʀɪᴅᴀᴅ:** Eꜱᴛᴀ ꜱᴇꜱɪóɴ ᴛᴇᴍᴘᴏʀᴀʟ ɴᴏ ᴅᴇʙᴇ ꜱᴇʀ ᴠɪɴᴄᴜʟᴀᴅᴀ ᴀ ᴛᴜ ᴄᴜᴇɴᴛᴀ ᴘʀɪɴᴄɪᴘᴀʟ.`;
+
+    const interactiveButtons = [{
+        name: "cta_copy",
+        buttonParamsJson: JSON.stringify({
+            display_text: "Copiar Código",
+            id: "copy-jadibot-code",
+            copy_code: rawCode 
+        })
+    }];
+
+    const interactiveMessage = {
+        caption: customCaption,
+        title: `*CODIGO:${rawCode.match(/.{1,4}/g)?.join("-")}`, // Muestra el código en el título
+        footer: "Este código expirará en 45 segundos.",
+        interactiveButtons
+    };
+
+    txtCode = await conn.sendMessage(m.chat, interactiveMessage, { quoted: m });
+    codeBot = null
+
+    console.log(rawCode)
 }
 if (txtCode && txtCode.key) {
 setTimeout(() => { conn.sendMessage(m.sender, { delete: txtCode.key })}, 30000)
