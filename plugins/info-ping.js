@@ -39,7 +39,7 @@ var handler = async (m, { conn }) => {
         .filter(([jid, chat]) => jid.endsWith('@g.us') && chat.isChats && !chat.metadata?.read_only && !chat.metadata?.announce)
         .map(v => v[0])
 
-    let texto = `\`${latensi.toFixed(4)} ms\``
+    let texto = `\`ⓘ ${latensi.toFixed(4)} ms\``
 
     const thumbnailBuffer = await getImageUrlBuffer()
 
